@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Events — Lambuth Memorial United Methodist Church</title>
+  <meta name="description" content="Weekly gatherings at Lambuth Memorial United Methodist Church: Sunday worship at 10:15 AM, plus Bible study and basketball every other Saturday." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <header class="header" data-header>
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="Lambuth Memorial United Methodist Church — Home">
+        <img class="brand__logo" src="assets/logo.png" alt="Lambuth Memorial United Methodist Church, Jackson, Tennessee" />
+      </a>
+      <button class="nav-toggle" data-nav-toggle aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" data-nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="watch.html">Watch Live</a>
+        <a href="events.html" class="is-active">Events</a>
+        <a href="give.html">Give</a>
+        <a href="contact.html" class="btn btn--dark">Visit Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section section--dark">
+      <div class="container container--narrow center">
+        <span class="eyebrow eyebrow--on-dark" data-reveal>Events</span>
+        <h1 class="display" data-reveal data-reveal-delay="1">When we gather</h1>
+        <p class="lede" data-reveal data-reveal-delay="2">
+          Our week is simple. Worship on Sundays, and time together every other Saturday.
+        </p>
+      </div>
+    </section>
+
+    <!-- WEEKLY RHYTHM -->
+    <section class="section">
+      <div class="container">
+        <span class="eyebrow" data-reveal>Weekly Rhythm</span>
+        <h2 class="h2" data-reveal data-reveal-delay="1" style="margin-bottom: var(--space-4);">
+          Our regular gatherings
+        </h2>
+        <!-- Service times injected from js/main.js -->
+        <div class="services" data-site="services" data-reveal data-reveal-delay="1"></div>
+      </div>
+    </section>
+
+    <!-- DETAILS -->
+    <section class="section section--beige">
+      <div class="container">
+        <div class="grid grid--3">
+          <div class="card" data-reveal>
+            <div class="card__kicker">Every Sunday</div>
+            <h3 class="h3">Worship</h3>
+            <p class="text-muted">
+              Our main gathering, at 10:15 AM. Come as you are — first-timers always welcome.
+            </p>
+          </div>
+          <div class="card" data-reveal data-reveal-delay="1">
+            <div class="card__kicker">Every other Saturday</div>
+            <h3 class="h3">Bible Study</h3>
+            <p class="text-muted">
+              Starts at 9:00 AM. An open, unhurried space to read and talk together.
+            </p>
+          </div>
+          <div class="card" data-reveal data-reveal-delay="2">
+            <div class="card__kicker">Every other Saturday</div>
+            <h3 class="h3">Basketball</h3>
+            <p class="text-muted">
+              At 10:00 AM, right after Bible study. Bring your shoes and a friend.
+            </p>
+          </div>
+        </div>
+        <p class="text-muted center" style="margin-top: var(--space-4);" data-reveal>
+          Want to confirm this Saturday&rsquo;s schedule? Follow us on
+          <a href="#" data-site="facebook" target="_blank" rel="noopener" style="color: var(--gold);">Facebook</a>
+          or <a href="contact.html" style="color: var(--gold);">reach out</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section section--dark center">
+      <div class="container container--narrow">
+        <p class="pull mx-auto" data-reveal>&ldquo;Come as you are.&rdquo;</p>
+        <div class="btn-row center" data-reveal data-reveal-delay="1">
+          <a href="contact.html" class="btn btn--gold">Plan Your Visit</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand">Lambuth <span>Memorial</span></div>
+          <p class="footer__umc">United Methodist Church</p>
+          <p data-site="address">160 Campbell St, Jackson, TN 38301</p>
+          <p><a href="#" data-site="maps-link" target="_blank" rel="noopener">Get directions &rarr;</a></p>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <nav class="footer__links">
+            <a href="about.html">About</a>
+            <a href="watch.html">Watch Live</a>
+            <a href="events.html">Events</a>
+            <a href="give.html">Give</a>
+            <a href="contact.html">Contact</a>
+          </nav>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <nav class="footer__links">
+            <a href="#" data-site="facebook" target="_blank" rel="noopener">Facebook</a>
+            <a href="#" data-site="email">info@lambuthmemorialumc.com</a>
+          </nav>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; <span data-site="year">2026</span> <span data-site="name">Lambuth Memorial United Methodist Church</span></span>
+        <span>Sundays at 10:15 AM &middot; Jackson, TN</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

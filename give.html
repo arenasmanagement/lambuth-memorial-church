@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Give — Lambuth Memorial United Methodist Church</title>
+  <meta name="description" content="Support the ministry of Lambuth Memorial United Methodist Church in Jackson, TN. Your generosity makes a difference." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <header class="header" data-header>
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="Lambuth Memorial United Methodist Church — Home">
+        <img class="brand__logo" src="assets/logo.png" alt="Lambuth Memorial United Methodist Church, Jackson, Tennessee" />
+      </a>
+      <button class="nav-toggle" data-nav-toggle aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" data-nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="watch.html">Watch Live</a>
+        <a href="events.html">Events</a>
+        <a href="give.html" class="is-active">Give</a>
+        <a href="contact.html" class="btn btn--dark">Visit Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section section--dark">
+      <div class="container container--narrow center">
+        <span class="eyebrow eyebrow--on-dark" data-reveal>Give</span>
+        <h1 class="display" data-reveal data-reveal-delay="1">Generosity</h1>
+        <p class="lede" data-reveal data-reveal-delay="2">
+          Every gift helps us keep the door wide open — for our neighbors, and for whoever
+          walks in next.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container container--narrow center">
+        <!-- Shown once a PayPal donation link is set as SITE.donationUrl in js/main.js -->
+        <div data-site="donate-ready" style="display:none;">
+          <h2 class="h2" data-reveal>Give online</h2>
+          <p class="lede" data-reveal data-reveal-delay="1">
+            Give securely through PayPal — no account required. Thank you for supporting
+            the work of our church.
+          </p>
+          <div class="btn-row center" data-reveal data-reveal-delay="1">
+            <a href="#" class="btn btn--gold" data-site="donate">Donate with PayPal</a>
+          </div>
+        </div>
+
+        <!-- Shown while SITE.donationUrl is still empty -->
+        <div data-site="donate-pending">
+          <h2 class="h2" data-reveal>Online giving is coming soon</h2>
+          <p class="lede" data-reveal data-reveal-delay="1">
+            We&rsquo;re setting up a simple, secure way to give online through PayPal.
+            As soon as it&rsquo;s ready, a giving button will appear right here. In the
+            meantime, you can give in person on Sunday, or reach out with any questions.
+          </p>
+          <div class="btn-row center" data-reveal data-reveal-delay="1">
+            <a href="contact.html" class="btn btn--dark">Contact Us</a>
+            <a href="#" class="btn btn--outline" data-site="facebook" target="_blank" rel="noopener">Follow on Facebook</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--beige">
+      <div class="container">
+        <div class="grid grid--3">
+          <div class="card" data-reveal>
+            <div class="card__kicker">In Person</div>
+            <h3 class="h3">On Sundays</h3>
+            <p class="text-muted">
+              Give during our 10:15 AM worship gathering at 160 Campbell St.
+            </p>
+          </div>
+          <div class="card" data-reveal data-reveal-delay="1">
+            <div class="card__kicker">Questions</div>
+            <h3 class="h3">We&rsquo;re here</h3>
+            <p class="text-muted">
+              Want to know how gifts are used, or set up recurring giving? Just ask.
+            </p>
+            <div class="btn-row">
+              <a href="contact.html" class="btn btn--outline">Get in Touch</a>
+            </div>
+          </div>
+          <div class="card" data-reveal data-reveal-delay="2">
+            <div class="card__kicker">Thank You</div>
+            <h3 class="h3">Every gift matters</h3>
+            <p class="text-muted">
+              Your generosity keeps this a place where anyone can come as they are.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand">Lambuth <span>Memorial</span></div>
+          <p class="footer__umc">United Methodist Church</p>
+          <p data-site="address">160 Campbell St, Jackson, TN 38301</p>
+          <p><a href="#" data-site="maps-link" target="_blank" rel="noopener">Get directions &rarr;</a></p>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <nav class="footer__links">
+            <a href="about.html">About</a>
+            <a href="watch.html">Watch Live</a>
+            <a href="events.html">Events</a>
+            <a href="give.html">Give</a>
+            <a href="contact.html">Contact</a>
+          </nav>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <nav class="footer__links">
+            <a href="#" data-site="facebook" target="_blank" rel="noopener">Facebook</a>
+            <a href="#" data-site="email">info@lambuthmemorialumc.com</a>
+          </nav>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; <span data-site="year">2026</span> <span data-site="name">Lambuth Memorial United Methodist Church</span></span>
+        <span>Sundays at 10:15 AM &middot; Jackson, TN</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

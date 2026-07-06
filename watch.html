@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Watch Live — Lambuth Memorial United Methodist Church</title>
+  <meta name="description" content="Watch Lambuth Memorial United Methodist Church worship online. Join us live or catch up on Facebook." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <header class="header" data-header>
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="Lambuth Memorial United Methodist Church — Home">
+        <img class="brand__logo" src="assets/logo.png" alt="Lambuth Memorial United Methodist Church, Jackson, Tennessee" />
+      </a>
+      <button class="nav-toggle" data-nav-toggle aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" data-nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="watch.html" class="is-active">Watch Live</a>
+        <a href="events.html">Events</a>
+        <a href="give.html">Give</a>
+        <a href="contact.html" class="btn btn--dark">Visit Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section section--dark">
+      <div class="container">
+        <div class="center" style="margin-bottom: var(--space-5);">
+          <span class="eyebrow eyebrow--on-dark" data-reveal>Watch Live</span>
+          <h1 class="h1" data-reveal data-reveal-delay="1">Join us for worship</h1>
+          <p class="lede mx-auto" style="max-width: 46ch;" data-reveal data-reveal-delay="2">
+            Can&rsquo;t make it in person? Worship with us right here on this page.
+            Our service streams live Sundays at 10:15 AM.
+          </p>
+        </div>
+
+        <!-- Livestream player OR "coming soon" injected from js/main.js -->
+        <div data-site="livestream" data-reveal data-reveal-delay="1">
+          <!-- Set SITE.livestreamEmbedUrl in js/main.js to enable the player -->
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="grid grid--3">
+          <div class="card" data-reveal>
+            <div class="card__kicker">Sundays</div>
+            <h3 class="h3">10:15 AM</h3>
+            <p class="text-muted">Our weekly worship gathering. Tune in live or watch later.</p>
+          </div>
+          <div class="card" data-reveal data-reveal-delay="1">
+            <div class="card__kicker">On Facebook</div>
+            <h3 class="h3">Follow along</h3>
+            <p class="text-muted">
+              We share updates and go live on our Facebook page.
+            </p>
+            <div class="btn-row">
+              <a href="#" class="btn btn--outline" data-site="facebook" target="_blank" rel="noopener">Open Facebook</a>
+            </div>
+          </div>
+          <div class="card" data-reveal data-reveal-delay="2">
+            <div class="card__kicker">In person</div>
+            <h3 class="h3">Come visit</h3>
+            <p class="text-muted">Nothing beats being here. We&rsquo;d love to meet you.</p>
+            <div class="btn-row">
+              <a href="contact.html" class="btn btn--outline">Plan Your Visit</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand">Lambuth <span>Memorial</span></div>
+          <p class="footer__umc">United Methodist Church</p>
+          <p data-site="address">160 Campbell St, Jackson, TN 38301</p>
+          <p><a href="#" data-site="maps-link" target="_blank" rel="noopener">Get directions &rarr;</a></p>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <nav class="footer__links">
+            <a href="about.html">About</a>
+            <a href="watch.html">Watch Live</a>
+            <a href="events.html">Events</a>
+            <a href="give.html">Give</a>
+            <a href="contact.html">Contact</a>
+          </nav>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <nav class="footer__links">
+            <a href="#" data-site="facebook" target="_blank" rel="noopener">Facebook</a>
+            <a href="#" data-site="email">info@lambuthmemorialumc.com</a>
+          </nav>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; <span data-site="year">2026</span> <span data-site="name">Lambuth Memorial United Methodist Church</span></span>
+        <span>Sundays at 10:15 AM &middot; Jackson, TN</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

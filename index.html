@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lambuth Memorial United Methodist Church — You Belong Here</title>
+  <meta name="description" content="Lambuth Memorial United Methodist Church in Jackson, TN. A place to start again. Sunday worship at 10:15 AM. Come as you are — you are welcome here." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header" data-header>
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="Lambuth Memorial United Methodist Church — Home">
+        <img class="brand__logo" src="assets/logo.png" alt="Lambuth Memorial United Methodist Church, Jackson, Tennessee" />
+      </a>
+      <button class="nav-toggle" data-nav-toggle aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" data-nav>
+        <a href="index.html" class="is-active">Home</a>
+        <a href="about.html">About</a>
+        <a href="watch.html">Watch Live</a>
+        <a href="events.html">Events</a>
+        <a href="give.html">Give</a>
+        <a href="contact.html" class="btn btn--dark">Visit Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero__media">
+        <!-- Replace with a real church photo: assets/hero.jpg -->
+        <!-- <img src="assets/hero.jpg" alt="Lambuth Memorial United Methodist Church" /> -->
+      </div>
+      <div class="hero__overlay"></div>
+      <div class="container hero__inner">
+        <span class="eyebrow eyebrow--on-dark" data-reveal>Jackson, Tennessee</span>
+        <h1 class="display hero__title" data-reveal data-reveal-delay="1">You Belong Here</h1>
+        <p class="hero__sub" data-reveal data-reveal-delay="2">A place to start again.</p>
+        <p class="hero__lede" data-reveal data-reveal-delay="3">
+          Come as you are. We&rsquo;d love to meet you.
+        </p>
+        <div class="btn-row" data-reveal data-reveal-delay="3">
+          <a href="contact.html" class="btn btn--gold">Plan Your Visit</a>
+          <a href="watch.html" class="btn btn--outline-light">Watch Live</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- INFO BAR -->
+    <section class="infobar">
+      <div class="container">
+        <div class="infobar__grid">
+          <div class="infobar__item">
+            <div class="infobar__label">Sunday Worship</div>
+            <div class="infobar__value">10:15 AM<small>Every Sunday</small></div>
+          </div>
+          <div class="infobar__item">
+            <div class="infobar__label">Where to Find Us</div>
+            <div class="infobar__value" data-site="address">160 Campbell St, Jackson, TN 38301</div>
+          </div>
+          <div class="infobar__item">
+            <div class="infobar__label">Every Other Saturday</div>
+            <div class="infobar__value">Bible Study 9:00 AM<small>Basketball 10:00 AM</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WELCOME -->
+    <section class="section">
+      <div class="container container--narrow center">
+        <span class="eyebrow" data-reveal>Welcome</span>
+        <h2 class="h1" data-reveal data-reveal-delay="1">Come as you are.</h2>
+        <p class="lede" data-reveal data-reveal-delay="2">
+          Whether you&rsquo;ve been in church your whole life or haven&rsquo;t stepped into one
+          in years, you are welcome here. No pressure. No expectations. Just a place where you
+          can come as you are and take a step forward.
+        </p>
+      </div>
+    </section>
+
+    <!-- TIMES (dark) -->
+    <section class="section section--dark">
+      <div class="container">
+        <div class="split">
+          <div>
+            <span class="eyebrow eyebrow--on-dark" data-reveal>Gather With Us</span>
+            <h2 class="h2" data-reveal data-reveal-delay="1">When we meet</h2>
+            <p class="lede" data-reveal data-reveal-delay="2">
+              Our week centers on Sunday worship, with Bible study and basketball
+              every other Saturday. Bring a friend, or come on your own — either way,
+              there&rsquo;s a place for you.
+            </p>
+            <div class="btn-row" data-reveal data-reveal-delay="2">
+              <a href="events.html" class="btn btn--gold">See What&rsquo;s Happening</a>
+            </div>
+          </div>
+          <div class="services" data-site="services" data-reveal data-reveal-delay="1">
+            <!-- Service times injected from js/main.js -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT TEASER -->
+    <section class="section section--beige">
+      <div class="container">
+        <div class="split">
+          <div class="media" data-reveal>
+            <div class="photo-slot">
+              <span class="photo-slot__icon">&#10057;</span>
+              <strong>Your photo here</strong>
+              <small>Add a real church photo as assets/community.jpg</small>
+            </div>
+          </div>
+          <div data-reveal data-reveal-delay="1">
+            <span class="eyebrow">Our Heart</span>
+            <h2 class="h2">A small church with a wide-open door.</h2>
+            <p class="text-muted">
+              We&rsquo;re an honest, welcoming congregation in the heart of Jackson.
+              You won&rsquo;t find a performance here — just real people, real faith,
+              and room for you to take your next step.
+            </p>
+            <div class="btn-row">
+              <a href="about.html" class="btn btn--outline">More About Us</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section section--dark center">
+      <div class="container container--narrow">
+        <p class="pull mx-auto" data-reveal>&ldquo;You are welcome here.&rdquo;</p>
+        <div class="btn-row center" data-reveal data-reveal-delay="1">
+          <a href="contact.html" class="btn btn--gold">Plan Your Visit</a>
+          <a href="#" class="btn btn--outline-light" data-site="facebook">Follow on Facebook</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER (shared markup across pages) -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand">Lambuth <span>Memorial</span></div>
+          <p class="footer__umc">United Methodist Church</p>
+          <p data-site="address">160 Campbell St, Jackson, TN 38301</p>
+          <p><a href="#" data-site="maps-link" target="_blank" rel="noopener">Get directions &rarr;</a></p>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <nav class="footer__links">
+            <a href="about.html">About</a>
+            <a href="watch.html">Watch Live</a>
+            <a href="events.html">Events</a>
+            <a href="give.html">Give</a>
+            <a href="contact.html">Contact</a>
+          </nav>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <nav class="footer__links">
+            <a href="#" data-site="facebook" target="_blank" rel="noopener">Facebook</a>
+            <a href="#" data-site="email">info@lambuthmemorialumc.com</a>
+          </nav>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; <span data-site="year">2026</span> <span data-site="name">Lambuth Memorial United Methodist Church</span></span>
+        <span>Sundays at 10:15 AM &middot; Jackson, TN</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

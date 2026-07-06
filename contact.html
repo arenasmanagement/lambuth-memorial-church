@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact &amp; Visit — Lambuth Memorial United Methodist Church</title>
+  <meta name="description" content="Plan your visit to Lambuth Memorial United Methodist Church at 160 Campbell St, Jackson, TN. Sundays at 10:15 AM. We'd love to meet you." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <header class="header" data-header>
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="Lambuth Memorial United Methodist Church — Home">
+        <img class="brand__logo" src="assets/logo.png" alt="Lambuth Memorial United Methodist Church, Jackson, Tennessee" />
+      </a>
+      <button class="nav-toggle" data-nav-toggle aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" data-nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="watch.html">Watch Live</a>
+        <a href="events.html">Events</a>
+        <a href="give.html">Give</a>
+        <a href="contact.html" class="btn btn--dark is-active">Visit Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section section--dark">
+      <div class="container container--narrow center">
+        <span class="eyebrow eyebrow--on-dark" data-reveal>Contact &amp; Visit</span>
+        <h1 class="display" data-reveal data-reveal-delay="1">We&rsquo;d love to meet you</h1>
+        <p class="lede" data-reveal data-reveal-delay="2">
+          Come as you are. Whether you have a question or just want to say you&rsquo;re coming,
+          we&rsquo;re glad you&rsquo;re here.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="split">
+          <!-- DETAILS -->
+          <div data-reveal>
+            <span class="eyebrow">Visit</span>
+            <h2 class="h2">Plan your visit</h2>
+            <p class="text-muted">
+              Join us for worship on Sundays at 10:15 AM. First time? You&rsquo;ll fit right in.
+            </p>
+
+            <div class="stack" style="margin-top: var(--space-4);">
+              <div>
+                <div class="card__kicker">Address</div>
+                <p style="margin:0;"><span data-site="address">160 Campbell St, Jackson, TN 38301</span></p>
+                <p style="margin:0;"><a href="#" data-site="maps-link" target="_blank" rel="noopener" style="color: var(--gold);">Get directions &rarr;</a></p>
+              </div>
+              <div>
+                <div class="card__kicker">Sundays</div>
+                <p style="margin:0;">Worship at 10:15 AM</p>
+              </div>
+              <div>
+                <div class="card__kicker">Every other Saturday</div>
+                <p style="margin:0;">Bible Study 9:00 AM &middot; Basketball 10:00 AM</p>
+              </div>
+              <div>
+                <div class="card__kicker">Email</div>
+                <p style="margin:0;"><a href="#" data-site="email" style="color: var(--gold);">info@lambuthmemorialumc.com</a></p>
+              </div>
+              <div>
+                <div class="card__kicker">Social</div>
+                <p style="margin:0;"><a href="#" data-site="facebook" target="_blank" rel="noopener" style="color: var(--gold);">Facebook &rarr;</a></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FORM
+               Submissions go to Formspree (set SITE.formEndpoint in js/main.js),
+               which emails them to the church address. Until Formspree is set up,
+               the form falls back to opening the visitor's email app. -->
+          <div data-reveal data-reveal-delay="1">
+            <div class="card">
+              <h3 class="h3">Send a message</h3>
+              <p class="text-muted" style="margin-bottom: var(--space-3);">
+                Have a question, want to plan a visit, or need prayer? Send us a note
+                and we&rsquo;ll get back to you.
+              </p>
+              <form class="form" id="contact-form">
+                <!-- Formspree niceties (used when an endpoint is configured) -->
+                <input type="hidden" name="_subject" value="New message from the church website" />
+                <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+                <div class="field">
+                  <label for="name">Name</label>
+                  <input type="text" id="name" name="name" autocomplete="name" required />
+                </div>
+                <div class="field">
+                  <label for="email">Your email</label>
+                  <input type="email" id="email" name="email" autocomplete="email" required />
+                </div>
+                <div class="field field--optional">
+                  <label for="phone">Phone</label>
+                  <input type="tel" id="phone" name="phone" autocomplete="tel" />
+                </div>
+                <div class="field">
+                  <label for="message">Message</label>
+                  <textarea id="message" name="message" required></textarea>
+                </div>
+                <label class="check">
+                  <input type="checkbox" id="prayer" name="prayer_request" value="Yes" />
+                  <span>This is a prayer request. We&rsquo;d be honored to pray for you.</span>
+                </label>
+                <button type="submit" class="btn btn--gold">Send Message</button>
+                <p class="form__hint">
+                  Prefer email? Write us directly at
+                  <a href="#" data-site="email">info@lambuthmemorialumc.com</a>.
+                </p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAP -->
+    <section class="section section--beige section--tight">
+      <div class="container">
+        <span class="eyebrow" data-reveal>Find Us</span>
+        <h2 class="h3" data-reveal data-reveal-delay="1" style="margin-bottom: var(--space-3);">
+          160 Campbell St, Jackson, TN
+        </h2>
+        <div class="map-frame" data-reveal data-reveal-delay="1">
+          <!-- Map embed src injected from js/main.js -->
+          <iframe data-site="maps-embed" title="Map to Lambuth Memorial United Methodist Church" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand">Lambuth <span>Memorial</span></div>
+          <p class="footer__umc">United Methodist Church</p>
+          <p data-site="address">160 Campbell St, Jackson, TN 38301</p>
+          <p><a href="#" data-site="maps-link" target="_blank" rel="noopener">Get directions &rarr;</a></p>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <nav class="footer__links">
+            <a href="about.html">About</a>
+            <a href="watch.html">Watch Live</a>
+            <a href="events.html">Events</a>
+            <a href="give.html">Give</a>
+            <a href="contact.html">Contact</a>
+          </nav>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <nav class="footer__links">
+            <a href="#" data-site="facebook" target="_blank" rel="noopener">Facebook</a>
+            <a href="#" data-site="email">info@lambuthmemorialumc.com</a>
+          </nav>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; <span data-site="year">2026</span> <span data-site="name">Lambuth Memorial United Methodist Church</span></span>
+        <span>Sundays at 10:15 AM &middot; Jackson, TN</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

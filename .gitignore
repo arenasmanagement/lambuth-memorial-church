@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+._*
+
+# Editor / OS junk
+Thumbs.db
+*.log
+
+# Node (only if you ever add tooling — not needed for this static site)
+node_modules/
