@@ -40,7 +40,7 @@
   --maxw: 1200px;
   --maxw-narrow: 780px;
   --radius: 4px;
-  --header-h: 76px;
+  --header-h: 86px;
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -229,7 +229,7 @@ p { margin: 0 0 var(--space-3); }
   line-height: 0;
 }
 .brand__logo {
-  height: 66px;
+  height: 74px;
   width: auto;
   display: block;
   transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
@@ -322,6 +322,10 @@ p { margin: 0 0 var(--space-3); }
   color: var(--text-on-dark);
   overflow: hidden;
 }
+/* Background layer: solid color today, drop-in photo or video later.
+   To use a photo:  <div class="hero__media"><img src="assets/hero.jpg" alt="" /></div>
+   To use a video:  <div class="hero__media"><video autoplay muted loop playsinline poster="assets/hero.jpg"><source src="assets/hero.mp4" type="video/mp4" /></video></div>
+   No other changes needed — the overlay below keeps text readable over anything. */
 .hero__media {
   position: absolute;
   inset: 0;
@@ -329,20 +333,28 @@ p { margin: 0 0 var(--space-3); }
     radial-gradient(120% 80% at 70% 20%, rgba(176,141,73,0.18), transparent 60%),
     linear-gradient(180deg, #201e1b 0%, #17110c 100%);
 }
-.hero__media img {
+.hero__media img,
+.hero__media video {
   width: 100%; height: 100%;
   object-fit: cover;
-  opacity: 0.5;
+  display: block;
 }
+/* Dark overlay keeps the (left-aligned) hero text readable over any background */
 .hero__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(20,18,15,0.35) 0%, rgba(20,18,15,0.75) 100%);
+  background:
+    linear-gradient(90deg, rgba(20,18,15,0.72) 0%, rgba(20,18,15,0.34) 52%, rgba(20,18,15,0.08) 100%),
+    linear-gradient(180deg, rgba(20,18,15,0.28) 0%, rgba(20,18,15,0.62) 100%);
 }
 .hero__inner {
   position: relative;
   z-index: 2;
-  padding: clamp(5rem, 16vh, 11rem) 0 clamp(4rem, 12vh, 8rem);
+  /* Left-aligned with intentional, luxurious breathing room from the edge */
+  padding: clamp(5rem, 16vh, 11rem)
+           var(--space-3)
+           clamp(4rem, 12vh, 8rem)
+           clamp(1.5rem, 7vw, 8rem);
 }
 .hero__title { color: var(--white-warm); margin-bottom: var(--space-3); }
 .hero__sub {
@@ -747,7 +759,7 @@ p { margin: 0 0 var(--space-3); }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 860px) {
-  .brand__logo { height: 52px; }
+  .brand__logo { height: 58px; }
   .nav-toggle { display: flex; }
   .nav {
     position: fixed;
