@@ -82,9 +82,10 @@
           </div>
 
           <!-- FORM
-               Submissions go to Formspree (set SITE.formEndpoint in js/main.js),
-               which emails them to the church address. Until Formspree is set up,
-               the form falls back to opening the visitor's email app. -->
+               Delivered by Formspree to Pastor Mike's inbox (endpoint set in
+               js/main.js -> SITE.formEndpoint). The visitor's email becomes the
+               Reply-To, so replies from Gmail go straight to them. Submits via
+               AJAX: the visitor stays on this page and sees a success message. -->
           <div data-reveal data-reveal-delay="1">
             <div class="card">
               <h3 class="h3">Send a message</h3>
@@ -93,8 +94,9 @@
                 and we&rsquo;ll get back to you.
               </p>
               <form class="form" id="contact-form">
-                <!-- Formspree niceties (used when an endpoint is configured) -->
-                <input type="hidden" name="_subject" value="New message from the church website" />
+                <!-- Email subject Pastor Mike sees in Gmail -->
+                <input type="hidden" name="_subject" value="New message from Lambuth Memorial website" />
+                <!-- Honeypot: bots fill this in, real people never see it -->
                 <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
                 <div class="field">
@@ -103,6 +105,7 @@
                 </div>
                 <div class="field">
                   <label for="email">Your email</label>
+                  <!-- Named "email" so Formspree sets Reply-To to the visitor -->
                   <input type="email" id="email" name="email" autocomplete="email" required />
                 </div>
                 <div class="field field--optional">
@@ -113,12 +116,15 @@
                   <label for="message">Message</label>
                   <textarea id="message" name="message" required></textarea>
                 </div>
+                <!-- Always sends Yes/No so the notification always states it -->
+                <input type="hidden" name="prayer_request" id="prayer-hidden" value="No" />
                 <label class="check">
-                  <input type="checkbox" id="prayer" name="prayer_request" value="Yes" />
+                  <input type="checkbox" id="prayer" />
                   <span>This is a prayer request. We&rsquo;d be honored to pray for you.</span>
                 </label>
                 <button type="submit" class="btn btn--gold">Send Message</button>
               </form>
+              <div class="form__status" id="form-status" role="status" aria-live="polite" style="display:none;"></div>
             </div>
           </div>
         </div>

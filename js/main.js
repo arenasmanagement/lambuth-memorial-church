@@ -18,17 +18,13 @@ const SITE = {
   tagline: "You Belong Here",
   address: "160 Campbell St, Jackson, TN 38301",
 
-  // --- Contact email ---
-  // PUBLIC church email (safe to show on the site). Do NOT put the pastor's
-  // personal email here. Set this address up for FREE with Cloudflare Email
-  // Routing and forward it to the pastor's real inbox. See README ("Email").
-  churchEmail: "info@lambuthmemorialumc.com",
-
-  // --- Contact form (Formspree) ---
-  // Free contact-form service. Create a form at https://formspree.io, then paste
-  // your endpoint here (looks like "https://formspree.io/f/abcdwxyz").
-  // While this is left as the placeholder below, the form falls back to opening
-  // the visitor's email app addressed to churchEmail — so it still works.
+  // --- Contact form (Formspree, free tier) ---
+  // Submissions are delivered by Formspree to Pastor Mike's inbox. IMPORTANT:
+  // the destination email is set INSIDE the Formspree dashboard, never here — so
+  // no personal email ever appears in the website code. You only paste the form
+  // endpoint below. Replies go straight to the visitor (Reply-To is their email).
+  // See README -> "Contact form" for the 5-minute setup.
+  // Replace this placeholder with your real endpoint, e.g. "https://formspree.io/f/abcdwxyz".
   formEndpoint: "https://formspree.io/f/your-form-id",
 
   // --- Social links ---
@@ -97,12 +93,6 @@ window.SITE = SITE;
     setText('[data-site="name-short"]', SITE.churchNameShort);
     setText('[data-site="address"]', SITE.address);
     setText('[data-site="tagline"]', SITE.tagline);
-
-    // Church email links + text
-    document.querySelectorAll('[data-site="email"]').forEach(function (el) {
-      el.textContent = SITE.churchEmail;
-      if (el.tagName === "A") el.setAttribute("href", "mailto:" + SITE.churchEmail);
-    });
 
     // Social links (Facebook / Instagram / TikTok). Empty URL hides the link.
     applySocial("facebook", SITE.facebookUrl);
@@ -257,46 +247,70 @@ window.SITE = SITE;
     });
   }
 
-  /** Contact form: submit to Formspree if configured, otherwise mailto fallback. */
+  /** Show a status message under the contact form. */
+  function setFormStatus(el, type, msg) {
+    if (!el) return;
+    el.textContent = msg || "";
+    el.className = "form__status" + (type ? " form__status--" + type : "");
+    el.style.display = msg ? "" : "none";
+  }
+
+  /**
+   * Contact form -> Formspree via AJAX. Visitor stays on the page and sees a
+   * success or error message. The visitor's email becomes the Reply-To (Formspree
+   * uses the field named "email"), so Pastor Mike can just hit Reply in Gmail.
+   */
   function initContactForm() {
     var form = document.getElementById("contact-form");
     if (!form) return;
+    var status = document.getElementById("form-status");
+    var endpoint = (SITE.formEndpoint || "").trim();
 
-    if (!isPlaceholderEndpoint(SITE.formEndpoint)) {
-      // Formspree is configured — let the browser POST to it natively.
-      form.setAttribute("action", SITE.formEndpoint.trim());
-      form.setAttribute("method", "POST");
-      var subj = form.querySelector('input[name="_subject"]');
-      if (subj) subj.value = "New message from the church website";
-      return;
-    }
-
-    // Fallback: build a mailto to the church email so the form works right away.
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var val = function (id) {
-        var el = document.getElementById(id);
-        return el ? el.value.trim() : "";
-      };
-      var name = val("name"), email = val("email"),
-        phone = val("phone"), message = val("message");
-      var prayerEl = document.getElementById("prayer");
-      var isPrayer = prayerEl && prayerEl.checked;
 
-      var subject = (isPrayer ? "Prayer request" : "Website message") +
-        (name ? " from " + name : "");
-      var lines = [
-        "Name: " + name,
-        "Email: " + email,
-        phone ? "Phone: " + phone : null,
-        isPrayer ? "Prayer request: Yes" : null,
-        "",
-        message,
-      ].filter(function (x) { return x !== null; });
+      // Keep the prayer-request field always present (Yes/No) so the email says so.
+      var prayerBox = document.getElementById("prayer");
+      var prayerHidden = document.getElementById("prayer-hidden");
+      if (prayerHidden) prayerHidden.value = prayerBox && prayerBox.checked ? "Yes" : "No";
 
-      window.location.href = "mailto:" + SITE.churchEmail +
-        "?subject=" + encodeURIComponent(subject) +
-        "&body=" + encodeURIComponent(lines.join("\n"));
+      if (isPlaceholderEndpoint(endpoint)) {
+        setFormStatus(status, "error",
+          "This contact form isn’t connected yet. Please try again soon, or reach us on Facebook.");
+        return;
+      }
+
+      var btn = form.querySelector('button[type="submit"]');
+      var originalLabel = btn ? btn.textContent : "";
+      if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
+      setFormStatus(status, "", "");
+
+      fetch(endpoint, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" },
+      })
+        .then(function (res) {
+          if (res.ok) {
+            form.reset();
+            form.style.display = "none";
+            setFormStatus(status, "success",
+              "Thank you! Your message has been sent successfully. " +
+              "Pastor Mike will get back to you as soon as possible.");
+          } else {
+            setFormStatus(status, "error",
+              "Sorry — something went wrong and your message didn’t send. " +
+              "Please try again in a moment, or reach us on Facebook.");
+          }
+        })
+        .catch(function () {
+          setFormStatus(status, "error",
+            "Sorry — we couldn’t send your message. Please check your connection " +
+            "and try again, or reach us on Facebook.");
+        })
+        .then(function () {
+          if (btn) { btn.disabled = false; btn.textContent = originalLabel; }
+        });
     });
   }
 

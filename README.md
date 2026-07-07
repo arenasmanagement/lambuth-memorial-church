@@ -40,8 +40,7 @@ Open it and edit the `SITE` block at the top. You can change:
 | `churchName` | Full church name, shown in the footer copyright: *Lambuth Memorial United Methodist Church* |
 | `churchNameShort` | Short name (*Lambuth Memorial UMC*) for tight spaces |
 | `address` | Street address (updates everywhere at once) |
-| `churchEmail` | Church inbox that the contact form delivers to. **Not shown anywhere on the site** — it's used only by the form and documented here. Never put the pastor's personal email here — see **Email** below. |
-| `formEndpoint` | Contact-form address (Formspree). See **Contact form** below. |
+| `formEndpoint` | Your Formspree endpoint. This is the **only** contact setting — the destination email (Pastor Mike's) is set in the Formspree dashboard, never here. See **Contact form** below. |
 | `facebookUrl` | Facebook page link (footer + Watch Live backup) |
 | `instagramUrl` | Instagram profile link. **Placeholder** — replace with the real URL. Leave `""` empty to hide the Instagram link everywhere. |
 | `tiktokUrl` | TikTok profile link. **Placeholder** — replace with the real URL. Leave `""` empty to hide the TikTok link everywhere. |
@@ -61,28 +60,58 @@ You do **not** need to touch the HTML for any of the above — the pages read fr
    and fill in the name/bio placeholders. (Instructions are in a comment right there.)
 > No AI-generated images — use your own real church photos.
 
-### Email (free, private) — Cloudflare Email Routing
-The website only ever shows the **public** address `info@lambuthmemorialumc.com`. Set that
-address up for **free** so it quietly forwards to the pastor's real inbox — the pastor's
-personal email never appears on the site:
-1. Add your domain to a free [Cloudflare](https://dash.cloudflare.com) account.
-2. Open **Email → Email Routing** and enable it (adds a few DNS records for you).
-3. Create a **custom address** `info@lambuthmemorialumc.com` and set its **destination**
-   to the pastor's personal email. Verify the destination once.
-4. Done. Anything sent to `info@…` now lands in the pastor's normal inbox. To change who
-   receives it later, just edit the destination in Cloudflare — no website change needed.
+### Email — how contact works now
+The website does **not** display any email address. Visitors reach the church through the
+**contact form**, which delivers to Pastor Mike's inbox via Formspree (see **Contact form**
+below). Pastor Mike's personal email never appears on the site.
 
-### Contact form (free) — Formspree
-The contact form works in two modes:
-- **Before setup:** it opens the visitor's email app addressed to `churchEmail`. Works out of the box.
-- **After setup (recommended):** it emails submissions to you via Formspree (free tier).
-  1. Sign up at [Formspree](https://formspree.io) and create a new form.
-  2. Point the form's notification email at `info@lambuthmemorialumc.com` (which Cloudflare
-     then forwards to the pastor).
-  3. Copy your endpoint (looks like `https://formspree.io/f/abcdwxyz`) into `formEndpoint`
-     in `js/main.js`. Save, commit, push. That's it.
+**Optional — a branded `info@lambuthmemorialumc.com` address (free, not required):** if you'd
+like a professional church address later (for newsletters, giving receipts, etc.), you can set
+one up for free with **Cloudflare Email Routing**: add the domain to a free
+[Cloudflare](https://dash.cloudflare.com) account, open **Email → Email Routing**, enable it,
+then create `info@…` and point its destination at Pastor Mike's inbox. This is independent of
+the contact form and isn't needed for the form to work.
 
-  The form collects **name, email, phone (optional), message, and a prayer-request checkbox**.
+### Contact form (free) — Formspree → Pastor Mike's Gmail
+The contact form on **Contact / Visit** is wired to send every submission to Pastor Mike
+Peery at **peery01@gmail.com** using Formspree's free tier. Submissions arrive as an email
+he can **Reply** to directly — the reply goes straight to the visitor who filled out the form.
+
+The visitor's email address, and therefore Pastor Mike's inbox, are **never shown on the
+website**. Pastor Mike's address lives only in the Formspree dashboard (and in this README).
+
+**One-time setup (about 5 minutes):**
+1. Go to [formspree.io](https://formspree.io) and create a **free account**. Sign up with, or
+   set the receiving email to, **peery01@gmail.com** so notifications go to Pastor Mike.
+2. Create a **New form** (name it e.g. "Lambuth Memorial Website").
+3. Set the form's **receiving/notification email to peery01@gmail.com**.
+4. Formspree sends a **confirmation email** to peery01@gmail.com — Pastor Mike must open it
+   and click **Confirm** to activate the form. (Formspree won't deliver messages until this
+   is done.)
+5. Copy the form's **endpoint URL** (looks like `https://formspree.io/f/abcdwxyz`).
+6. Open `js/main.js`, paste it into `formEndpoint`, then save, commit, and push:
+   ```bash
+   git add . && git commit -m "Connect contact form" && git push
+   ```
+7. **Test it:** open the live site's Contact page, send a test message, and confirm it lands
+   in peery01@gmail.com. Then hit **Reply** in Gmail and check the reply is addressed back to
+   the email you typed in the form (that's the Reply-To working).
+
+**What the form does (already built — you don't need to change any of this):**
+- Collects **Name (required), Email (required), Phone (optional), Message (required),** and a
+  **prayer-request** checkbox.
+- Email subject: **"New message from Lambuth Memorial website"**.
+- The notification body includes the name, email, phone, whether it's a prayer request, and
+  the message.
+- **Reply-To = the visitor's email** (the email field is named `email`, which Formspree uses
+  for Reply-To automatically).
+- The visitor **stays on the page** and sees: *"Thank you! Your message has been sent
+  successfully. Pastor Mike will get back to you as soon as possible."* — or a friendly error
+  message if something fails. No redirect.
+
+> Free-tier limit: Formspree allows 50 submissions/month on the free plan, which is plenty for
+> a church site. If you ever outgrow it, the endpoint can be swapped for another provider
+> (e.g. Web3Forms, also free) without changing the form itself.
 
 ### Turning on the livestream later — YouTube Live
 Goal: people watch **on the website**, not just on Facebook. Workflow: **OBS → YouTube Live → embedded here.**

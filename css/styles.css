@@ -629,6 +629,26 @@ p { margin: 0 0 var(--space-3); }
   border-color: var(--gold);
 }
 .field textarea { min-height: 140px; resize: vertical; }
+
+/* Contact-form success / error message */
+.form__status {
+  margin-top: var(--space-3);
+  padding: 1rem 1.15rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.form__status--success {
+  border-color: rgba(176, 141, 73, 0.5);
+  background: rgba(176, 141, 73, 0.10);
+  color: var(--ink);
+}
+.form__status--error {
+  border-color: rgba(160, 60, 50, 0.4);
+  background: rgba(160, 60, 50, 0.08);
+  color: #7a2e26;
+}
 .field--optional label::after {
   content: " (optional)";
   font-weight: 400;
