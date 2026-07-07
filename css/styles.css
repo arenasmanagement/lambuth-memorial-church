@@ -538,6 +538,37 @@ p { margin: 0 0 var(--space-3); }
   margin: 0 auto var(--space-3);
 }
 
+/* Empty livestream area, shaped like the real 16:9 player */
+.video-frame--empty {
+  background:
+    radial-gradient(120% 80% at 50% 30%, rgba(176,141,73,0.14), transparent 60%),
+    var(--charcoal-soft);
+  border: 1px solid var(--line-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.video-empty { padding: clamp(1.5rem, 5vw, 3rem); max-width: 46ch; }
+.video-empty .video-placeholder__text { margin-bottom: 0; }
+
+/* "Watch on Facebook" backup shown below the player (never the main action) */
+.watch-backup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.watch-backup__label { font-size: 0.9rem; color: var(--text-on-dark-muted); }
+.btn--sm { padding: 0.7rem 1.4rem; font-size: 0.75rem; }
+
+/* Tappable church address (opens the right maps app per device) */
+.addr-link { cursor: pointer; transition: color 0.2s var(--ease); }
+.addr-link:hover,
+.addr-link:focus-visible { color: var(--gold); outline: none; text-decoration: underline; text-underline-offset: 3px; }
+
 /* ---------- Map ---------- */
 .map-frame {
   width: 100%;

@@ -31,8 +31,13 @@ const SITE = {
   // the visitor's email app addressed to churchEmail — so it still works.
   formEndpoint: "https://formspree.io/f/your-form-id",
 
-  // --- Links ---
+  // --- Social links ---
+  // Facebook is real. Instagram + TikTok are PLACEHOLDERS — replace the URLs
+  // below with the church's real profile links when ready. Leave any of them ""
+  // (empty) to hide that icon/link everywhere it appears.
   facebookUrl: "https://www.facebook.com/LambuthMemorialChurch",
+  instagramUrl: "https://www.instagram.com/", // TODO: replace with real profile URL
+  tiktokUrl: "https://www.tiktok.com/", // TODO: replace with real profile URL
 
   // Online giving via PayPal (no monthly fee — only per-transaction fees).
   // Create a PayPal "Donate" button/link and paste the URL here, e.g.
@@ -99,13 +104,10 @@ window.SITE = SITE;
       if (el.tagName === "A") el.setAttribute("href", "mailto:" + SITE.churchEmail);
     });
 
-    document.querySelectorAll('[data-site="facebook"]').forEach(function (el) {
-      el.setAttribute("href", SITE.facebookUrl);
-    });
-
-    document.querySelectorAll('[data-site="maps-link"]').forEach(function (el) {
-      el.setAttribute("href", SITE.mapsLinkUrl);
-    });
+    // Social links (Facebook / Instagram / TikTok). Empty URL hides the link.
+    applySocial("facebook", SITE.facebookUrl);
+    applySocial("instagram", SITE.instagramUrl);
+    applySocial("tiktok", SITE.tiktokUrl);
 
     document.querySelectorAll('[data-site="maps-embed"]').forEach(function (el) {
       el.setAttribute("src", SITE.mapsEmbedUrl);
@@ -116,6 +118,69 @@ window.SITE = SITE;
     applyServiceTimes();
     applyDonation();
     applyLivestream();
+    applyAddressLinks();
+  }
+
+  /** Point every [data-site="<key>"] link at its URL, or hide it when empty. */
+  function applySocial(key, url) {
+    var has = url && url.trim() !== "";
+    document.querySelectorAll('[data-site="' + key + '"]').forEach(function (el) {
+      if (has) {
+        el.setAttribute("href", url);
+        el.setAttribute("target", "_blank");
+        el.setAttribute("rel", "noopener");
+        el.style.display = "";
+      } else {
+        // Only hide standalone social links, never buttons that carry other text.
+        if (el.getAttribute("data-site-optional") !== "false") el.style.display = "none";
+      }
+    });
+  }
+
+  /** Device-aware maps: Apple Maps on iOS, default nav on Android, Google Maps on desktop. */
+  function deviceMapsUrl() {
+    var ua = navigator.userAgent || "";
+    var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    var isAndroid = /Android/.test(ua);
+    var q = encodeURIComponent(SITE.address);
+    if (isIOS) return { url: "https://maps.apple.com/?q=" + q, newTab: false };
+    if (isAndroid) return { url: "geo:0,0?q=" + q, newTab: false };
+    return { url: "https://www.google.com/maps/search/?api=1&query=" + q, newTab: true };
+  }
+
+  /** Make every address + "Get directions" link open the right maps app for the device. */
+  function applyAddressLinks() {
+    var m = deviceMapsUrl();
+
+    // Existing "Get directions" anchors
+    document.querySelectorAll('[data-site="maps-link"]').forEach(function (a) {
+      a.setAttribute("href", m.url);
+      if (m.newTab) {
+        a.setAttribute("target", "_blank");
+        a.setAttribute("rel", "noopener");
+      } else {
+        a.removeAttribute("target");
+      }
+    });
+
+    // Make the address text itself tappable
+    document.querySelectorAll('[data-site="address"]').forEach(function (el) {
+      if (el.getAttribute("data-addr-wired") === "true") return;
+      el.setAttribute("data-addr-wired", "true");
+      el.classList.add("addr-link");
+      el.setAttribute("role", "link");
+      el.setAttribute("tabindex", "0");
+      el.setAttribute("aria-label", "Open directions to " + SITE.address);
+      var go = function () {
+        if (m.newTab) window.open(m.url, "_blank", "noopener");
+        else window.location.href = m.url;
+      };
+      el.addEventListener("click", go);
+      el.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+      });
+    });
   }
 
   function applyServiceTimes() {
@@ -170,17 +235,21 @@ window.SITE = SITE;
           'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ' +
           'allowfullscreen></iframe></div>';
       } else {
+        // 16:9 "coming soon" area shaped like the real player, with Facebook as
+        // a small backup BELOW it (never the main action).
         container.innerHTML =
-          '<div class="video-placeholder">' +
+          '<div class="video-frame video-frame--empty">' +
+          '<div class="video-empty">' +
           '<span class="video-placeholder__eyebrow">Live Worship</span>' +
-          '<p class="video-placeholder__title">Our live stream will appear right here.</p>' +
-          '<p class="video-placeholder__text">Each Sunday at 10:15 AM you&rsquo;ll be able to ' +
-          'watch the service on this page. If you can&rsquo;t see it, you can also join us live ' +
-          'on Facebook.</p>' +
-          '<a class="btn btn--light" data-site="facebook" href="' +
-          SITE.facebookUrl + '" target="_blank" rel="noopener">Watch on Facebook</a>' +
+          '<p class="video-placeholder__title">Livestream coming soon</p>' +
+          '<p class="video-placeholder__text">Our service will play right here each ' +
+          'Sunday at 10:15 AM.</p>' +
+          "</div></div>" +
+          '<div class="watch-backup">' +
+          '<span class="watch-backup__label">Can&rsquo;t see the stream?</span>' +
+          '<a class="btn btn--outline-light btn--sm" data-site="facebook" ' +
+          'href="' + SITE.facebookUrl + '" target="_blank" rel="noopener">Watch on Facebook</a>' +
           "</div>";
-        // re-apply facebook href to the freshly-inserted link
         container.querySelectorAll('[data-site="facebook"]').forEach(function (el) {
           el.setAttribute("href", SITE.facebookUrl);
         });

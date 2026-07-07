@@ -40,13 +40,15 @@ Open it and edit the `SITE` block at the top. You can change:
 | `churchName` | Full church name, shown in the footer copyright: *Lambuth Memorial United Methodist Church* |
 | `churchNameShort` | Short name (*Lambuth Memorial UMC*) for tight spaces |
 | `address` | Street address (updates everywhere at once) |
-| `churchEmail` | **Public** church email. Currently `info@lambuthmemorialumc.com`. Never put the pastor's personal email here — see **Email** below. |
+| `churchEmail` | Church inbox that the contact form delivers to. **Not shown anywhere on the site** — it's used only by the form and documented here. Never put the pastor's personal email here — see **Email** below. |
 | `formEndpoint` | Contact-form address (Formspree). See **Contact form** below. |
-| `facebookUrl` | Your Facebook page link (used as a backup on Watch Live) |
+| `facebookUrl` | Facebook page link (footer + Watch Live backup) |
+| `instagramUrl` | Instagram profile link. **Placeholder** — replace with the real URL. Leave `""` empty to hide the Instagram link everywhere. |
+| `tiktokUrl` | TikTok profile link. **Placeholder** — replace with the real URL. Leave `""` empty to hide the TikTok link everywhere. |
 | `donationUrl` | PayPal giving link. **Leave `""` empty** and the Give page shows a "coming soon" message. Paste a PayPal link and a "Donate with PayPal" button appears automatically. |
-| `livestreamEmbedUrl` | YouTube Live embed. **Leave `""` empty** and Watch Live shows a "stream will appear here" placeholder. Paste a YouTube embed URL and the player appears in-page. |
+| `livestreamEmbedUrl` | YouTube Live embed. **Leave `""` empty** and Watch Live shows a "Livestream coming soon" placeholder shaped like the player. Paste a YouTube embed URL and it plays in-page. |
 | `mapsEmbedUrl` | The embedded Google Map on the Contact page |
-| `mapsLinkUrl` | The "Get directions" link |
+| `mapsLinkUrl` | Fallback "Get directions" link. Note: the site now auto-picks the map app per device (Apple Maps on iPhone/iPad, default nav on Android, Google Maps on desktop), and the address text itself is tappable. |
 | `services` | Service/gathering times (name, day, time). These render automatically on Home and Events. |
 
 You do **not** need to touch the HTML for any of the above — the pages read from `js/main.js`.
