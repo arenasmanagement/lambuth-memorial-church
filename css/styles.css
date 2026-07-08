@@ -264,6 +264,11 @@ p { margin: 0 0 var(--space-3); }
 .nav .btn { text-transform: uppercase; }
 .nav .btn::after { display: none; }
 
+/* Desktop defaults: Contact link is mobile-only; CTA reads "Visit Us" */
+.nav__mobile-link { display: none; }
+.nav__cta-desktop { display: inline; }
+.nav__cta-mobile { display: none; }
+
 /* Primary CTA in the navigation ("Visit Us") */
 .nav .btn--dark {
   background: var(--gold);
@@ -780,21 +785,41 @@ p { margin: 0 0 var(--space-3); }
 /* ---------- Responsive ---------- */
 @media (max-width: 860px) {
   .brand__logo { height: 58px; }
-  .nav-toggle { display: flex; }
+  /* Keep the logo + hamburger clickable ABOVE the full-screen menu overlay */
+  .brand { position: relative; z-index: 210; }
+  .nav-toggle { display: flex; position: relative; z-index: 210; }
+
+  /* Full-screen, solid, opaque mobile menu overlay */
   .nav {
     position: fixed;
-    inset: var(--header-h) 0 0 0;
+    inset: 0;                     /* cover 100% of the viewport */
+    z-index: 200;                 /* above header (100), hero, and all content */
+    display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
     gap: var(--space-4);
-    background: var(--white-warm);
+    background: var(--white-warm); /* solid warm ivory — no transparency */
+    padding: calc(var(--header-h) + var(--space-4)) var(--space-4) var(--space-5);
+    overflow-y: auto;
     transform: translateX(100%);
     transition: transform 0.4s var(--ease);
-    padding: var(--space-5);
   }
   .nav.is-open { transform: translateX(0); }
-  .nav a { font-size: 1.4rem; font-family: var(--font-serif); }
-  .nav .btn { font-family: var(--font-sans); font-size: 0.9rem; }
+  .nav a {
+    font-size: 1.6rem;
+    font-family: var(--font-serif);
+    color: var(--ink);            /* dark charcoal, clearly readable */
+    text-align: center;
+  }
+  .nav a::after { display: none; } /* no underline animation in the overlay */
+  .nav .btn { font-family: var(--font-sans); font-size: 0.95rem; }
+
+  /* Mobile-only Contact link (hidden on desktop) */
+  .nav__mobile-link { display: block; }
+  /* CTA label swap: "Plan Your Visit" on mobile */
+  .nav__cta-desktop { display: none; }
+  .nav__cta-mobile { display: inline; }
 
   .split { grid-template-columns: 1fr; }
   .grid--2, .grid--3 { grid-template-columns: 1fr; }
