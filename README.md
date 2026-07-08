@@ -40,7 +40,7 @@ Open it and edit the `SITE` block at the top. You can change:
 | `churchName` | Full church name, shown in the footer copyright: *Lambuth Memorial United Methodist Church* |
 | `churchNameShort` | Short name (*Lambuth Memorial UMC*) for tight spaces |
 | `address` | Street address (updates everywhere at once) |
-| `formEndpoint` | Your Formspree endpoint. This is the **only** contact setting — the destination email (Pastor Mike's) is set in the Formspree dashboard, never here. See **Contact form** below. |
+| `formEndpoint` | Where the contact form posts — defaults to `/api/contact` (our own serverless function). You normally don't change this; the destination email + API key live in Vercel env vars. See **Contact form** below. |
 | `facebookUrl` | Facebook page link (footer + Watch Live backup) |
 | `instagramUrl` | Instagram profile link. **Placeholder** — replace with the real URL. Leave `""` empty to hide the Instagram link everywhere. |
 | `tiktokUrl` | TikTok profile link. **Placeholder** — replace with the real URL. Leave `""` empty to hide the TikTok link everywhere. |
@@ -62,7 +62,7 @@ You do **not** need to touch the HTML for any of the above — the pages read fr
 
 ### Email — how contact works now
 The website does **not** display any email address. Visitors reach the church through the
-**contact form**, which delivers to Pastor Mike's inbox via Formspree (see **Contact form**
+**contact form**, which delivers to Pastor Mike's inbox via Resend (see **Contact form**
 below). Pastor Mike's personal email never appears on the site.
 
 **Optional — a branded `info@lambuthmemorialumc.com` address (free, not required):** if you'd
@@ -72,46 +72,59 @@ one up for free with **Cloudflare Email Routing**: add the domain to a free
 then create `info@…` and point its destination at Pastor Mike's inbox. This is independent of
 the contact form and isn't needed for the form to work.
 
-### Contact form (free) — Formspree → Pastor Mike's Gmail
-The contact form on **Contact / Visit** is wired to send every submission to Pastor Mike
-Peery at **peery01@gmail.com** using Formspree's free tier. Submissions arrive as an email
-he can **Reply** to directly — the reply goes straight to the visitor who filled out the form.
+### Contact form — Resend (same standard as arenasmanagementco.com)
+The contact form on **Contact / Visit** sends every submission to Pastor Mike Peery at
+**peery01@gmail.com** using **[Resend](https://resend.com)** (free tier: 3,000 emails/month).
+It's the same architecture as the Arenas Management Co. site.
 
-The visitor's email address, and therefore Pastor Mike's inbox, are **never shown on the
-website**. Pastor Mike's address lives only in the Formspree dashboard (and in this README).
+How it flows: the form POSTs to our own serverless function at **`api/contact.js`** (runs on
+Vercel), which calls Resend to email the message to Pastor Mike. The visitor's email is set as
+**Reply-To**, so he just hits **Reply** in Gmail and it goes straight to the person. No email
+address appears anywhere on the website — the destination and the API key live only in Vercel's
+Environment Variables (and this README).
 
-**One-time setup (about 5 minutes):**
-1. Go to [formspree.io](https://formspree.io) and create a **free account**. Sign up with, or
-   set the receiving email to, **peery01@gmail.com** so notifications go to Pastor Mike.
-2. Create a **New form** (name it e.g. "Lambuth Memorial Website").
-3. Set the form's **receiving/notification email to peery01@gmail.com**.
-4. Formspree sends a **confirmation email** to peery01@gmail.com — Pastor Mike must open it
-   and click **Confirm** to activate the form. (Formspree won't deliver messages until this
-   is done.)
-5. Copy the form's **endpoint URL** (looks like `https://formspree.io/f/abcdwxyz`).
-6. Open `js/main.js`, paste it into `formEndpoint`, then save, commit, and push:
-   ```bash
-   git add . && git commit -m "Connect contact form" && git push
-   ```
-7. **Test it:** open the live site's Contact page, send a test message, and confirm it lands
-   in peery01@gmail.com. Then hit **Reply** in Gmail and check the reply is addressed back to
-   the email you typed in the form (that's the Reply-To working).
+**One-time setup (~10 minutes):**
 
-**What the form does (already built — you don't need to change any of this):**
+1. **Create a free Resend account** at [resend.com](https://resend.com) (signing in with the
+   church Google account is fine).
+2. **Add & verify the domain.** In Resend → **Domains → Add Domain**, enter
+   `lambuthmemorialumc.com`. Resend shows a few DNS records (an MX record and some TXT records
+   for SPF/DKIM). Add those at **Namecheap → Domain → Advanced DNS** (same place we set up the
+   site), then click **Verify** in Resend. *(Ask me and I'll add the records in Namecheap for
+   you — I already have access.)*
+   - Verifying lets emails send from a branded address like `contact@lambuthmemorialumc.com`.
+   - Not ready to verify? You can start with Resend's test sender `onboarding@resend.dev`
+     (step 5's `FROM_EMAIL`) and verify the domain later.
+3. **Create an API key.** Resend → **API Keys → Create API Key**. Copy it (starts with `re_`).
+   Keep it secret — it goes in Vercel, never in the code.
+4. **Confirm delivery to Gmail.** Nothing to click for Resend, but do a real test in step 6.
+5. **Add environment variables in Vercel.** Vercel → your project → **Settings → Environment
+   Variables** → add these (Production + Preview):
+   | Name | Value |
+   |---|---|
+   | `RESEND_API_KEY` | your `re_...` key from step 3 |
+   | `CONTACT_EMAIL` | `peery01@gmail.com` |
+   | `FROM_EMAIL` | `Lambuth Memorial <contact@lambuthmemorialumc.com>` (or `Lambuth Memorial <onboarding@resend.dev>` until the domain is verified) |
+6. **Redeploy & test.** Trigger a redeploy (push any change, or Vercel → Deployments →
+   Redeploy). Open the live Contact page, send a test message, and confirm it lands in
+   **peery01@gmail.com**. Then hit **Reply** in Gmail and check the reply is addressed to the
+   email you typed in the form (that's Reply-To working).
+
+**What the form does (already built — no code changes needed):**
 - Collects **Name (required), Email (required), Phone (optional), Message (required),** and a
   **prayer-request** checkbox.
-- Email subject: **"New message from Lambuth Memorial website"**.
-- The notification body includes the name, email, phone, whether it's a prayer request, and
-  the message.
-- **Reply-To = the visitor's email** (the email field is named `email`, which Formspree uses
-  for Reply-To automatically).
-- The visitor **stays on the page** and sees: *"Thank you! Your message has been sent
-  successfully. Pastor Mike will get back to you as soon as possible."* — or a friendly error
-  message if something fails. No redirect.
+- Email subject: **"New message from Lambuth Memorial website"**; the body includes name, email,
+  phone, whether it's a prayer request, and the message, plus a "Reply to …" button.
+- **Reply-To = the visitor's email** (set server-side in `api/contact.js`).
+- **Spam protection:** a hidden honeypot field (bots fill it, humans don't — those are silently
+  dropped), plus server-side validation. You can add Resend's own filtering later if needed.
+- The visitor **stays on the page** and sees *"Thank you! Your message has been sent
+  successfully. Pastor Mike will get back to you as soon as possible."* — or a friendly error.
+  No redirect.
 
-> Free-tier limit: Formspree allows 50 submissions/month on the free plan, which is plenty for
-> a church site. If you ever outgrow it, the endpoint can be swapped for another provider
-> (e.g. Web3Forms, also free) without changing the form itself.
+> This same pattern (Resend + a small `api/contact` function + Reply-To + honeypot) is your
+> reusable standard for every client site. For a new site: copy `api/contact.js`, set the three
+> env vars in that site's Vercel project, and verify its domain in Resend.
 
 ### Turning on the livestream later — YouTube Live
 Goal: people watch **on the website**, not just on Facebook. Workflow: **OBS → YouTube Live → embedded here.**
@@ -254,14 +267,14 @@ PayPal's per-transaction fee on donations — there are **no monthly fees** anyw
 |---|---|---|
 | [GitHub](https://github.com) | Stores the website's code | Free |
 | [Vercel](https://vercel.com) | Hosts the live site, auto-deploys on push | Free |
-| [Cloudflare Email Routing](https://www.cloudflare.com/) | Forwards `info@…` to the pastor's inbox (keeps personal email private) | Free |
-| [Formspree](https://formspree.io) | Delivers contact-form submissions | Free tier |
+| [Resend](https://resend.com) | Sends contact-form emails (via `api/contact.js`) with Reply-To to the visitor | Free tier (3,000/mo) |
 | [YouTube Live](https://youtube.com) | Livestream that embeds on the Watch page (OBS → YouTube → site) | Free |
 | [PayPal Donate](https://www.paypal.com/) | Online giving link | No monthly fee; per-transaction fee only |
 | [Google Analytics](https://analytics.google.com) + [Search Console](https://search.google.com/search-console) | See visitors & help Google find the site | Free (optional) |
+| [Cloudflare Email Routing](https://www.cloudflare.com/) | *Optional* — a branded `info@…` inbox (not needed for the contact form) | Free |
 
 **Suggested order to set these up:** GitHub + Vercel first (get it live) → custom domain →
-Cloudflare Email Routing (`info@…`) → Formspree (`formEndpoint`) → YouTube Live
+Resend contact form (verify domain + Vercel env vars) → YouTube Live
 (`livestreamEmbedUrl`) → PayPal (`donationUrl`) → Analytics/Search Console last.
 
 > **Adding Google Analytics later (optional):** create a free GA4 property, copy its small
@@ -271,7 +284,7 @@ Cloudflare Email Routing (`info@…`) → Formspree (`formEndpoint`) → YouTube
 ## Notes
 - No AI-generated images and no invented ministries/programs — content is real and
   provided by the church.
-- The pastor's personal email never appears on the site. The public address is
-  `info@lambuthmemorialumc.com`, forwarded privately via Cloudflare.
-- The contact form posts to Formspree once `formEndpoint` is set; until then it falls back
-  to opening the visitor's email app. Either way, nothing runs on a server you have to pay for.
+- No email address appears anywhere on the site. The contact form is the email path; it
+  delivers to Pastor Mike via Resend with Reply-To set to the visitor.
+- The only server-side code is `api/contact.js` (a tiny Vercel serverless function). It runs
+  on Vercel's free tier — no server to manage or pay for.

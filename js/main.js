@@ -18,14 +18,12 @@ const SITE = {
   tagline: "You Belong Here",
   address: "160 Campbell St, Jackson, TN 38301",
 
-  // --- Contact form (Formspree, free tier) ---
-  // Submissions are delivered by Formspree to Pastor Mike's inbox. IMPORTANT:
-  // the destination email is set INSIDE the Formspree dashboard, never here — so
-  // no personal email ever appears in the website code. You only paste the form
-  // endpoint below. Replies go straight to the visitor (Reply-To is their email).
-  // See README -> "Contact form" for the 5-minute setup.
-  // Replace this placeholder with your real endpoint, e.g. "https://formspree.io/f/abcdwxyz".
-  formEndpoint: "https://formspree.io/f/your-form-id",
+  // --- Contact form ---
+  // The form posts to our own serverless function at /api/contact, which sends
+  // the message via Resend to Pastor Mike's inbox (Reply-To = the visitor).
+  // The destination email + API key live in Vercel Environment Variables, never
+  // in this file. You normally don't need to change this. See README -> "Contact form".
+  formEndpoint: "/api/contact",
 
   // --- Social links ---
   // Facebook is real. Instagram + TikTok are PLACEHOLDERS — replace the URLs
@@ -81,11 +79,6 @@ window.SITE = SITE;
     document.querySelectorAll(selector).forEach(function (el) {
       el.textContent = value;
     });
-  }
-
-  function isPlaceholderEndpoint(url) {
-    var u = (url || "").trim();
-    return u === "" || /your-form-id|xxxx|FORM_ID/i.test(u);
   }
 
   function applySettings() {
@@ -256,29 +249,34 @@ window.SITE = SITE;
   }
 
   /**
-   * Contact form -> Formspree via AJAX. Visitor stays on the page and sees a
-   * success or error message. The visitor's email becomes the Reply-To (Formspree
-   * uses the field named "email"), so Pastor Mike can just hit Reply in Gmail.
+   * Contact form -> our /api/contact serverless function (which sends via Resend).
+   * Submits JSON over AJAX: the visitor stays on the page and sees a success or
+   * error message. Reply-To is set to the visitor server-side, so Pastor Mike can
+   * just hit Reply in Gmail.
    */
   function initContactForm() {
     var form = document.getElementById("contact-form");
     if (!form) return;
     var status = document.getElementById("form-status");
-    var endpoint = (SITE.formEndpoint || "").trim();
+    var endpoint = (SITE.formEndpoint || "/api/contact").trim();
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      // Keep the prayer-request field always present (Yes/No) so the email says so.
+      var val = function (id) {
+        var el = document.getElementById(id);
+        return el ? el.value.trim() : "";
+      };
       var prayerBox = document.getElementById("prayer");
-      var prayerHidden = document.getElementById("prayer-hidden");
-      if (prayerHidden) prayerHidden.value = prayerBox && prayerBox.checked ? "Yes" : "No";
-
-      if (isPlaceholderEndpoint(endpoint)) {
-        setFormStatus(status, "error",
-          "This contact form isn’t connected yet. Please try again soon, or reach us on Facebook.");
-        return;
-      }
+      var honeypot = form.querySelector('[name="_gotcha"]');
+      var payload = {
+        name: val("name"),
+        email: val("email"),
+        phone: val("phone"),
+        message: val("message"),
+        prayer_request: prayerBox && prayerBox.checked ? "Yes" : "No",
+        _gotcha: honeypot ? honeypot.value : "",
+      };
 
       var btn = form.querySelector('button[type="submit"]');
       var originalLabel = btn ? btn.textContent : "";
@@ -287,8 +285,8 @@ window.SITE = SITE;
 
       fetch(endpoint, {
         method: "POST",
-        body: new FormData(form),
-        headers: { Accept: "application/json" },
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       })
         .then(function (res) {
           if (res.ok) {
