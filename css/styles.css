@@ -785,6 +785,10 @@ p { margin: 0 0 var(--space-3); }
 /* ---------- Responsive ---------- */
 @media (max-width: 860px) {
   .brand__logo { height: 58px; }
+  /* IMPORTANT: backdrop-filter on the header makes it the containing block for
+     position:fixed children, which would shrink the menu overlay to the header.
+     Remove it on mobile so the overlay anchors to the full viewport. */
+  .header { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--white-warm); }
   /* Keep the logo + hamburger clickable ABOVE the full-screen menu overlay */
   .brand { position: relative; z-index: 210; }
   .nav-toggle { display: flex; position: relative; z-index: 210; }
