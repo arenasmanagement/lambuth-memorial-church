@@ -95,36 +95,54 @@ Environment Variables (and this README).
    - Verifying lets emails send from a branded address like `contact@lambuthmemorialumc.com`.
    - Not ready to verify? You can start with Resend's test sender `onboarding@resend.dev`
      (step 5's `FROM_EMAIL`) and verify the domain later.
-3. **Create an API key.** Resend → **API Keys → Create API Key**. Copy it (starts with `re_`).
-   Keep it secret — it goes in Vercel, never in the code.
+3. **Create a NEW API key just for this site.** Resend → **API Keys → Create API Key**, name it
+   e.g. "Lambuth". Copy it (starts with `re_`). **Do not reuse another site's key** — a separate
+   key means you can rotate it later without affecting any other site. Keep it secret (it goes
+   in Vercel env only, never in the code).
 4. **Confirm delivery to Gmail.** Nothing to click for Resend, but do a real test in step 6.
-5. **Add environment variables in Vercel.** Vercel → your project → **Settings → Environment
-   Variables** → add these (Production + Preview):
+5. **Add environment variables in the LAMBUTH Vercel project only.** Vercel → the
+   `lambuth-memorial-church` project → **Settings → Environment Variables** → add these
+   (Production + Preview). These live in this project only and don't touch any other project:
    | Name | Value |
    |---|---|
-   | `RESEND_API_KEY` | your `re_...` key from step 3 |
+   | `RESEND_API_KEY` | the `re_...` key from step 3 (the Lambuth-specific key) |
    | `CONTACT_EMAIL` | `peery01@gmail.com` |
-   | `FROM_EMAIL` | `Lambuth Memorial <contact@lambuthmemorialumc.com>` (or `Lambuth Memorial <onboarding@resend.dev>` until the domain is verified) |
+   | `BCC_EMAIL` | `arenasmanagementco@gmail.com` (blind copy — optional; remove to send with no BCC) |
+   | `FROM_EMAIL` | `Lambuth Memorial <onboarding@resend.dev>` for now; switch to `Lambuth Memorial <contact@lambuthmemorialumc.com>` after the domain verifies |
 6. **Redeploy & test.** Trigger a redeploy (push any change, or Vercel → Deployments →
    Redeploy). Open the live Contact page, send a test message, and confirm it lands in
-   **peery01@gmail.com**. Then hit **Reply** in Gmail and check the reply is addressed to the
-   email you typed in the form (that's Reply-To working).
+   **peery01@gmail.com** (and, if `BCC_EMAIL` is set, a blind copy in arenasmanagementco@gmail.com).
+   Then hit **Reply** in Gmail and check the reply is addressed to the email you typed in the
+   form (that's Reply-To working).
 
 **What the form does (already built — no code changes needed):**
 - Collects **Name (required), Email (required), Phone (optional), Message (required),** and a
   **prayer-request** checkbox.
 - Email subject: **"New message from Lambuth Memorial website"**; the body includes name, email,
   phone, whether it's a prayer request, and the message, plus a "Reply to …" button.
-- **Reply-To = the visitor's email** (set server-side in `api/contact.js`).
+- **To:** `CONTACT_EMAIL` (Pastor Mike). **BCC:** `BCC_EMAIL` if set (the agency inbox).
+  **Reply-To = the visitor's email** (all set server-side in `api/contact.js`).
 - **Spam protection:** a hidden honeypot field (bots fill it, humans don't — those are silently
   dropped), plus server-side validation. You can add Resend's own filtering later if needed.
 - The visitor **stays on the page** and sees *"Thank you! Your message has been sent
   successfully. Pastor Mike will get back to you as soon as possible."* — or a friendly error.
   No redirect.
 
-> This same pattern (Resend + a small `api/contact` function + Reply-To + honeypot) is your
-> reusable standard for every client site. For a new site: copy `api/contact.js`, set the three
-> env vars in that site's Vercel project, and verify its domain in Resend.
+### Using one Resend account for several client sites (safe when done this way)
+One Resend account can serve many sites. To keep every site independent and never break another:
+- **Verify each domain separately** under the one account (Lambuth: `lambuthmemorialumc.com`;
+  Arenas: `arenasmanagementco.com`). Adding a domain never affects existing ones.
+- **Create a separate API key per site** (name them). Never reuse or regenerate another site's
+  key — rotating a shared key would break every site using it.
+- **Keep env vars in each site's own Vercel project.** They're project-scoped and don't leak
+  between projects, so changing Lambuth's variables cannot affect Arenas.
+- **Only shared thing:** the account-wide free quota (3,000 emails/month) and billing. Both
+  sites draw from the same pool — plenty for a church + agency, just good to know.
+
+> This pattern (Resend + a small `api/contact` function + Reply-To + honeypot) is the reusable
+> standard for every client site. For a new site: copy `api/contact.js`, verify that site's
+> domain in Resend, create a **new** API key for it, and set its env vars in **its own** Vercel
+> project.
 
 ### Turning on the livestream later — YouTube Live
 Goal: people watch **on the website**, not just on Facebook. Workflow: **OBS → YouTube Live → embedded here.**

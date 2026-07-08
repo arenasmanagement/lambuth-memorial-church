@@ -11,12 +11,17 @@
 
    ENVIRONMENT VARIABLES (set in Vercel → Settings → Environment
    Variables — never commit these):
-     RESEND_API_KEY   your Resend API key (secret, starts "re_")
-     CONTACT_EMAIL    where submissions are delivered (Pastor Mike's inbox)
-     FROM_EMAIL       verified sender. Until the domain is verified in
-                      Resend, use "Lambuth Memorial <onboarding@resend.dev>".
-                      After verifying lambuthmemorialumc.com, set it to
+     RESEND_API_KEY   Resend API key (secret, starts "re_"). Use a key created
+                      specifically for THIS site — do not reuse another site's key.
+     CONTACT_EMAIL    primary recipient — Pastor Mike's inbox (the "To").
+     BCC_EMAIL        optional blind-copy recipient (e.g. the agency inbox). Leave
+                      unset to send with no BCC.
+     FROM_EMAIL       verified sender. Until the domain is verified in Resend, use
+                      "Lambuth Memorial <onboarding@resend.dev>". After verifying
+                      lambuthmemorialumc.com, set it to
                       "Lambuth Memorial <contact@lambuthmemorialumc.com>".
+
+   These live in THIS Vercel project only. They do not affect any other project.
    ============================================================ */
 
 function escapeHtml(value) {
@@ -62,6 +67,7 @@ module.exports = async function handler(req, res) {
 
     var apiKey = process.env.RESEND_API_KEY;
     var to = process.env.CONTACT_EMAIL;
+    var bcc = (process.env.BCC_EMAIL || "").trim();
     var from = process.env.FROM_EMAIL || "Lambuth Memorial <onboarding@resend.dev>";
     if (!apiKey || !to) {
       // Not configured yet — front-end will show a friendly error.
@@ -91,19 +97,22 @@ module.exports = async function handler(req, res) {
         '<p style="color:#555;font-size:11px;margin-top:24px;">Sent from the contact form at lambuthmemorialumc.com</p>' +
       "</div>";
 
+    var mail = {
+      from: from,
+      to: [to],
+      reply_to: email, // Reply goes straight to the visitor
+      subject: subject,
+      html: html,
+    };
+    if (bcc) mail.bcc = [bcc]; // optional blind copy (e.g. agency inbox)
+
     var resp = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         Authorization: "Bearer " + apiKey,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        from: from,
-        to: [to],
-        reply_to: email, // Reply goes straight to the visitor
-        subject: subject,
-        html: html,
-      }),
+      body: JSON.stringify(mail),
     });
 
     if (!resp.ok) {
