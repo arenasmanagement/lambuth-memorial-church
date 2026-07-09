@@ -46,33 +46,62 @@
       </div>
     </section>
 
+    <!-- ONLINE GIVING WIDGET
+         Amount + frequency selectors for previewing the giving experience. The
+         site NEVER processes payments — the Donate button just opens the provider
+         link (SITE.donationUrl / PayPal), which handles the amount + payment.
+         Turn giving on in js/main.js: set donationUrl and donationEnabled: true. -->
     <section class="section">
-      <div class="container container--narrow center">
-        <!-- Shown once a PayPal donation link is set as SITE.donationUrl in js/main.js -->
-        <div data-site="donate-ready" style="display:none;">
-          <h2 class="h2" data-reveal>Give online</h2>
-          <p class="lede" data-reveal data-reveal-delay="1">
-            Give securely through PayPal — no account required. Thank you for supporting
-            the work of our church.
+      <div class="container container--narrow">
+        <div class="give-card" data-give-widget data-reveal>
+          <h2 class="h2 center">Give online</h2>
+          <p class="text-muted center" style="max-width: 46ch; margin: 0 auto var(--space-4);">
+            Thank you for supporting the work of Lambuth Memorial. Choose a frequency and
+            an amount to get started.
           </p>
-          <div class="btn-row center" data-reveal data-reveal-delay="1">
-            <a href="#" class="btn btn--gold" data-site="donate">Donate with PayPal</a>
+
+          <!-- Frequency -->
+          <div class="give-freq" role="group" aria-label="Giving frequency">
+            <button type="button" class="give-freq__btn is-selected" data-freq="one-time" aria-selected="true">One-Time Gift</button>
+            <button type="button" class="give-freq__btn" data-freq="monthly" aria-selected="false">Monthly Gift</button>
+          </div>
+
+          <!-- Suggested amounts -->
+          <div class="give-amounts" role="group" aria-label="Choose an amount">
+            <button type="button" class="give-amt" data-amount="10" aria-pressed="false">$10</button>
+            <button type="button" class="give-amt is-selected" data-amount="25" aria-pressed="true">$25</button>
+            <button type="button" class="give-amt" data-amount="50" aria-pressed="false">$50</button>
+            <button type="button" class="give-amt" data-amount="100" aria-pressed="false">$100</button>
+            <button type="button" class="give-amt give-amt--wide" data-amount="custom" aria-pressed="false">Custom Amount</button>
+          </div>
+
+          <!-- Custom amount (revealed when "Custom Amount" is chosen) -->
+          <div class="give-custom" data-give-custom hidden>
+            <label for="give-custom-amount" class="give-custom__label">Enter an amount</label>
+            <div class="give-custom__field">
+              <span class="give-custom__prefix">$</span>
+              <input type="number" id="give-custom-amount" min="1" step="1" inputmode="decimal" placeholder="0" />
+            </div>
+          </div>
+
+          <!-- Action: active Donate button when giving is live, otherwise a setup notice -->
+          <div class="give-action">
+            <a href="#" class="btn btn--gold btn--lg give-donate" data-site="donate">Donate<span data-give-summary></span></a>
+            <p class="give-setup" data-give-setup hidden>
+              Online giving is being set up. Please check back soon — give in person on Sunday, or
+              <a href="contact.html">reach out</a> with any questions.
+            </p>
+            <p class="give-note">
+              Online giving is handled securely through PayPal. You may be able to give using PayPal
+              or a debit/credit card.
+            </p>
           </div>
         </div>
 
-        <!-- Shown while SITE.donationUrl is still empty -->
-        <div data-site="donate-pending">
-          <h2 class="h2" data-reveal>Online giving is coming soon</h2>
-          <p class="lede" data-reveal data-reveal-delay="1">
-            We&rsquo;re setting up a simple, secure way to give online through PayPal.
-            As soon as it&rsquo;s ready, a giving button will appear right here. In the
-            meantime, you can give in person on Sunday, or reach out with any questions.
-          </p>
-          <div class="btn-row center" data-reveal data-reveal-delay="1">
-            <a href="contact.html" class="btn btn--dark">Contact Us</a>
-            <a href="#" class="btn btn--outline" data-site="facebook" target="_blank" rel="noopener">Follow on Facebook</a>
-          </div>
-        </div>
+        <p class="text-muted center" style="margin-top: var(--space-4);">
+          Prefer to give in person? You&rsquo;re welcome to give during our 10:15 AM Sunday
+          worship at 160 Campbell St.
+        </p>
       </div>
     </section>
 

@@ -33,11 +33,19 @@ const SITE = {
   instagramUrl: "https://www.instagram.com/", // TODO: replace with real profile URL
   tiktokUrl: "https://www.tiktok.com/", // TODO: replace with real profile URL
 
-  // Online giving via PayPal (no monthly fee — only per-transaction fees).
-  // Create a PayPal "Donate" button/link and paste the URL here, e.g.
-  // "https://www.paypal.com/donate/?hosted_button_id=XXXXXXXX".
-  // Leave "" empty to show a friendly "coming soon" message instead.
+  // --- Online giving (provider-agnostic; PayPal for now) ---
+  // The website NEVER processes payments. It only links out to the provider,
+  // which handles the amount, payment method, and card/security details.
+  // To turn giving ON later (see notes at the bottom of the Give section):
+  //   1) donationUrl:     paste your real PayPal donation link, e.g.
+  //                       "https://www.paypal.com/donate/?hosted_button_id=XXXXXXXX"
+  //                       or a PayPal.me link like "https://www.paypal.me/YourChurch"
+  //   2) donationEnabled: change to true
+  // While donationEnabled is false OR donationUrl is empty, the Give page shows a
+  // clean "Online giving is being set up" message instead of an active button.
+  donationProvider: "PayPal",
   donationUrl: "",
+  donationEnabled: false,
 
   // --- Livestream (YouTube Live) ---
   // Workflow: OBS  ->  YouTube Live  ->  embedded here on the website.
@@ -181,11 +189,19 @@ window.SITE = SITE;
     });
   }
 
-  function applyDonation() {
-    var hasDonation = SITE.donationUrl && SITE.donationUrl.trim() !== "";
+  /** Whether online giving is live: explicitly enabled AND a real URL is set. */
+  function givingIsLive() {
+    return SITE.donationEnabled === true &&
+      SITE.donationUrl && SITE.donationUrl.trim() !== "";
+  }
 
+  function applyDonation() {
+    var live = givingIsLive();
+
+    // Legacy simple donate buttons/blocks (used elsewhere) still work.
     document.querySelectorAll('[data-site="donate"]').forEach(function (el) {
-      if (hasDonation) {
+      if (el.closest("[data-give-widget]")) return; // handled by the widget
+      if (live) {
         el.setAttribute("href", SITE.donationUrl);
         el.setAttribute("target", "_blank");
         el.setAttribute("rel", "noopener");
@@ -196,13 +212,102 @@ window.SITE = SITE;
         el.setAttribute("aria-disabled", "true");
       }
     });
-
     document.querySelectorAll('[data-site="donate-ready"]').forEach(function (el) {
-      el.style.display = hasDonation ? "" : "none";
+      el.style.display = live ? "" : "none";
     });
     document.querySelectorAll('[data-site="donate-pending"]').forEach(function (el) {
-      el.style.display = hasDonation ? "none" : "";
+      el.style.display = live ? "none" : "";
     });
+
+    initGiveWidget();
+  }
+
+  /**
+   * Give page donation widget: frequency (one-time/monthly) + preset amounts +
+   * custom amount. The site never processes payments — the Donate button simply
+   * opens the configured provider URL (PayPal), which handles amount + payment.
+   */
+  function initGiveWidget() {
+    var widget = document.querySelector("[data-give-widget]");
+    if (!widget) return;
+
+    var live = givingIsLive();
+    var freqBtns = widget.querySelectorAll("[data-freq]");
+    var amtBtns = widget.querySelectorAll("[data-amount]");
+    var customWrap = widget.querySelector("[data-give-custom]");
+    var customInput = widget.querySelector("#give-custom-amount");
+    var donateBtn = widget.querySelector('[data-site="donate"]');
+    var summary = widget.querySelector("[data-give-summary]");
+    var setupMsg = widget.querySelector("[data-give-setup]");
+
+    var state = { freq: "one-time", amount: "25", custom: "" };
+
+    function refresh() {
+      // Reflect selection on the buttons
+      freqBtns.forEach(function (b) {
+        var on = b.getAttribute("data-freq") === state.freq;
+        b.classList.toggle("is-selected", on);
+        b.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      amtBtns.forEach(function (b) {
+        var on = b.getAttribute("data-amount") === state.amount;
+        b.classList.toggle("is-selected", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      if (customWrap) customWrap.hidden = state.amount !== "custom";
+
+      // Human-readable amount for the button summary
+      var amt = state.amount === "custom"
+        ? (state.custom ? "$" + state.custom : "")
+        : "$" + state.amount;
+      var freqLabel = state.freq === "monthly" ? " / month" : "";
+      if (summary) summary.textContent = amt ? " " + amt + freqLabel : "";
+
+      // Button vs. "being set up" message
+      if (live) {
+        if (donateBtn) {
+          donateBtn.style.display = "";
+          donateBtn.setAttribute("href", SITE.donationUrl);
+          donateBtn.setAttribute("target", "_blank");
+          donateBtn.setAttribute("rel", "noopener");
+          donateBtn.classList.remove("is-disabled");
+          donateBtn.removeAttribute("aria-disabled");
+        }
+        if (setupMsg) setupMsg.hidden = true;
+      } else {
+        if (donateBtn) donateBtn.style.display = "none";
+        if (setupMsg) setupMsg.hidden = false;
+      }
+    }
+
+    freqBtns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        state.freq = b.getAttribute("data-freq");
+        refresh();
+      });
+    });
+    amtBtns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        state.amount = b.getAttribute("data-amount");
+        refresh();
+        if (state.amount === "custom" && customInput) customInput.focus();
+      });
+    });
+    if (customInput) {
+      customInput.addEventListener("input", function () {
+        state.custom = customInput.value.replace(/[^0-9.]/g, "");
+        refresh();
+      });
+    }
+    // The site does not process payments; just hand off to the provider.
+    if (donateBtn) {
+      donateBtn.addEventListener("click", function (e) {
+        if (!live) { e.preventDefault(); return; }
+        // href already points at SITE.donationUrl; provider handles the amount.
+      });
+    }
+
+    refresh();
   }
 
   function applyLivestream() {
