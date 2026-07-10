@@ -33,19 +33,22 @@ const SITE = {
   instagramUrl: "https://www.instagram.com/", // TODO: replace with real profile URL
   tiktokUrl: "https://www.tiktok.com/", // TODO: replace with real profile URL
 
-  // --- Online giving (provider-agnostic; PayPal for now) ---
-  // The website NEVER processes payments. It only links out to the provider,
-  // which handles the amount, payment method, and card/security details.
-  // To turn giving ON later (see notes at the bottom of the Give section):
-  //   1) donationUrl:     paste your real PayPal donation link, e.g.
-  //                       "https://www.paypal.com/donate/?hosted_button_id=XXXXXXXX"
-  //                       or a PayPal.me link like "https://www.paypal.me/YourChurch"
-  //   2) donationEnabled: change to true
-  // While donationEnabled is false OR donationUrl is empty, the Give page shows a
-  // clean "Online giving is being set up" message instead of an active button.
+  // --- Online giving (PayPal) ---
+  // The Give page builds a secure PayPal donate link that PRE-FILLS the amount the
+  // visitor chose, so they never pick it twice. The site never processes payments —
+  // PayPal handles the amount, payment method, and card/security.
+  //   • One-Time gifts: amount pre-filled → straight to payment.
+  //   • Monthly gifts:  amount pre-filled; the donor ticks "Make this a monthly
+  //     donation" on PayPal's secure page (PayPal has no URL parameter to pre-tick it).
+  // To turn giving OFF, set donationEnabled: false (shows a "being set up" notice).
   donationProvider: "PayPal",
+  donationEnabled: true,
+  paypalMerchantId: "RNMSDCJKQJP6U",          // public PayPal Merchant ID (safe to expose)
+  donationCurrency: "USD",
+  donationItemName: "Donation to Lambuth Memorial United Methodist Church",
+  // Optional full-URL override. If set, it is used AS-IS and the amount is NOT
+  // appended (only use this if you ever switch to a hosted PayPal button/page).
   donationUrl: "",
-  donationEnabled: false,
 
   // --- Livestream (YouTube Live) ---
   // Workflow: OBS  ->  YouTube Live  ->  embedded here on the website.
@@ -189,10 +192,32 @@ window.SITE = SITE;
     });
   }
 
-  /** Whether online giving is live: explicitly enabled AND a real URL is set. */
+  /** Whether online giving is live: enabled AND a merchant ID (or override URL) exists. */
   function givingIsLive() {
-    return SITE.donationEnabled === true &&
-      SITE.donationUrl && SITE.donationUrl.trim() !== "";
+    var hasMerchant = SITE.paypalMerchantId && SITE.paypalMerchantId.trim() !== "";
+    var hasOverride = SITE.donationUrl && SITE.donationUrl.trim() !== "";
+    return SITE.donationEnabled === true && (hasMerchant || hasOverride);
+  }
+
+  /**
+   * Build a secure PayPal donate link with the amount + frequency pre-filled.
+   * The visitor picks on our site; PayPal receives the amount already set.
+   *   freq "monthly" -> no_recurring=0 (PayPal shows the "Make this monthly" tick)
+   *   freq "one-time" -> no_recurring=1 (single payment)
+   * A full donationUrl override, if set, is returned as-is.
+   */
+  function buildDonationUrl(amount, freq) {
+    if (SITE.donationUrl && SITE.donationUrl.trim() !== "") return SITE.donationUrl.trim();
+    if (!SITE.paypalMerchantId || SITE.paypalMerchantId.trim() === "") return "";
+    var params = [
+      "business=" + encodeURIComponent(SITE.paypalMerchantId.trim()),
+      "currency_code=" + encodeURIComponent(SITE.donationCurrency || "USD"),
+      "item_name=" + encodeURIComponent(SITE.donationItemName || "Donation"),
+      "no_recurring=" + (freq === "monthly" ? "0" : "1"),
+    ];
+    var amt = parseFloat(amount);
+    if (!isNaN(amt) && amt > 0) params.push("amount=" + amt);
+    return "https://www.paypal.com/donate/?" + params.join("&");
   }
 
   function applyDonation() {
@@ -238,9 +263,14 @@ window.SITE = SITE;
     var customInput = widget.querySelector("#give-custom-amount");
     var donateBtn = widget.querySelector('[data-site="donate"]');
     var summary = widget.querySelector("[data-give-summary]");
+    var monthlyNote = widget.querySelector("[data-give-monthly-note]");
     var setupMsg = widget.querySelector("[data-give-setup]");
 
     var state = { freq: "one-time", amount: "25", custom: "" };
+
+    function currentAmount() {
+      return state.amount === "custom" ? state.custom : state.amount;
+    }
 
     function refresh() {
       // Reflect selection on the buttons
@@ -256,18 +286,25 @@ window.SITE = SITE;
       });
       if (customWrap) customWrap.hidden = state.amount !== "custom";
 
-      // Human-readable amount for the button summary
-      var amt = state.amount === "custom"
-        ? (state.custom ? "$" + state.custom : "")
-        : "$" + state.amount;
-      var freqLabel = state.freq === "monthly" ? " / month" : "";
-      if (summary) summary.textContent = amt ? " " + amt + freqLabel : "";
+      var amt = currentAmount();
+      var amtNum = parseFloat(amt);
+      var hasAmt = !isNaN(amtNum) && amtNum > 0;
+      var freqWord = state.freq === "monthly" ? "monthly gift" : "one-time gift";
 
-      // Button vs. "being set up" message
+      // Small confirming caption under the button
+      if (summary) {
+        summary.textContent = hasAmt
+          ? "$" + amt + " " + freqWord
+          : "You’ll choose your amount on the next screen — " + freqWord + ".";
+      }
+      // Monthly expectation note (amount is never chosen twice; only the tick)
+      if (monthlyNote) monthlyNote.hidden = !(live && state.freq === "monthly");
+
+      // Button (live) vs. "being set up" message
       if (live) {
         if (donateBtn) {
           donateBtn.style.display = "";
-          donateBtn.setAttribute("href", SITE.donationUrl);
+          donateBtn.setAttribute("href", buildDonationUrl(amt, state.freq));
           donateBtn.setAttribute("target", "_blank");
           donateBtn.setAttribute("rel", "noopener");
           donateBtn.classList.remove("is-disabled");
@@ -276,6 +313,7 @@ window.SITE = SITE;
         if (setupMsg) setupMsg.hidden = true;
       } else {
         if (donateBtn) donateBtn.style.display = "none";
+        if (monthlyNote) monthlyNote.hidden = true;
         if (setupMsg) setupMsg.hidden = false;
       }
     }

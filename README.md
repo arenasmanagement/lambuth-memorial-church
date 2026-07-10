@@ -44,7 +44,10 @@ Open it and edit the `SITE` block at the top. You can change:
 | `facebookUrl` | Facebook page link (footer + Watch Live backup) |
 | `instagramUrl` | Instagram profile link. **Placeholder** — replace with the real URL. Leave `""` empty to hide the Instagram link everywhere. |
 | `tiktokUrl` | TikTok profile link. **Placeholder** — replace with the real URL. Leave `""` empty to hide the TikTok link everywhere. |
-| `donationUrl` | PayPal giving link. **Leave `""` empty** and the Give page shows a "coming soon" message. Paste a PayPal link and a "Donate with PayPal" button appears automatically. |
+| `donationEnabled` | `true` = online giving is live; `false` = shows a "being set up" notice. |
+| `paypalMerchantId` | The church's public PayPal Merchant ID (`RNMSDCJKQJP6U`). Used to build the amount-prefill donate link. |
+| `donationItemName` | Description shown on PayPal's donation page. |
+| `donationUrl` | Optional full-URL override (used as-is; amount not appended). Leave `""` for the normal amount-prefill flow. |
 | `livestreamEmbedUrl` | YouTube Live embed. **Leave `""` empty** and Watch Live shows a "Livestream coming soon" placeholder shaped like the player. Paste a YouTube embed URL and it plays in-page. |
 | `mapsEmbedUrl` | The embedded Google Map on the Contact page |
 | `mapsLinkUrl` | Fallback "Get directions" link. Note: the site now auto-picks the map app per device (Apple Maps on iPhone/iPad, default nav on Android, Google Maps on desktop), and the address text itself is tappable. |
@@ -153,10 +156,29 @@ Goal: people watch **on the website**, not just on Facebook. Workflow: **OBS →
 3. Paste it into `livestreamEmbedUrl` in `js/main.js`. Save, commit, push. The player turns
    on by itself, and Facebook stays as a backup button.
 
-### Turning on online giving later — PayPal
-1. Create a free PayPal **Donate** button/link (no monthly fee, only per-transaction fees).
-2. Paste the link (e.g. `https://www.paypal.com/donate/?hosted_button_id=XXXXXXXX`) into
-   `donationUrl` in `js/main.js`. Save, commit, push. The "Donate with PayPal" button appears.
+### Online giving — PayPal (live)
+Giving is connected to the church's PayPal Business account (**Merchant ID `RNMSDCJKQJP6U`**).
+The Give page is the primary experience: the visitor chooses **One-Time / Monthly** and an
+**amount** ($10/$25/$50/$100/Custom), then "Continue to Secure Donation" opens PayPal with the
+**amount already filled in** — they never choose it twice. The website never processes payments;
+PayPal handles the amount, payment method, and card/security.
+
+- **One-Time:** link uses `no_recurring=1` → amount pre-filled, straight to payment.
+- **Monthly:** link uses `no_recurring=0` → amount pre-filled, and the donor ticks "Make this a
+  monthly donation" on PayPal (PayPal has no URL parameter to pre-tick it).
+
+**To change anything (in `js/main.js`):**
+- `donationEnabled: true/false` — turn giving on/off (off shows a "being set up" notice).
+- `paypalMerchantId` — the church's PayPal Merchant ID (public/safe to expose).
+- `donationItemName` — the description shown on PayPal's page.
+- Suggested amounts ($10/$25/$50/$100) live in `give.html` (the `data-amount` buttons).
+- `donationUrl` — optional full-URL override; if set it's used as-is and the amount is NOT
+  appended (only for switching to a hosted PayPal button/page later).
+
+> Note: the amount-prefill link uses PayPal's Merchant-ID donate URL. This gives the cleanest
+> "website-is-primary" flow. The trade-off vs. a hosted PayPal donate button is that the hosted
+> button offers a "cover the fees" option but does **not** allow pre-filling the amount from the
+> site. We chose amount-prefill to match the goal of not making donors choose twice.
 
 ---
 

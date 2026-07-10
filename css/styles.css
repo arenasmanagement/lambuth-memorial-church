@@ -693,6 +693,18 @@ p { margin: 0 0 var(--space-3); }
 /* Action */
 .give-action { margin-top: var(--space-4); text-align: center; }
 .give-action .btn--lg { width: 100%; }
+.give-summary {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: var(--space-2) auto 0;
+}
+.give-monthly-note {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  max-width: 46ch;
+  margin: 0.4rem auto 0;
+}
 .give-note {
   font-size: 0.85rem;
   color: var(--text-muted);
