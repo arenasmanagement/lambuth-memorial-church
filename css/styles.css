@@ -445,6 +445,15 @@ p { margin: 0 0 var(--space-3); }
   color: var(--text-on-dark);
 }
 .card--dark h3 { color: var(--white-warm); }
+/* Warm, static info card (no hover lift) — used for "What to Expect". */
+.card--soft {
+  background: var(--beige);
+  border-color: var(--line);
+}
+.card--soft:hover {
+  transform: none;
+  box-shadow: none;
+}
 
 /* ---------- Service rows (from main.js) ---------- */
 .services {

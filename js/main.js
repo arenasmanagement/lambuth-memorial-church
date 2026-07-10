@@ -68,6 +68,13 @@ const SITE = {
   mapsLinkUrl:
     "https://www.google.com/maps/search/?api=1&query=160+Campbell+St,+Jackson,+TN+38301",
 
+  // --- Google Analytics 4 ---
+  // Measurement ID for THIS website's own GA4 property/data stream (separate from
+  // any other site). Loading the tag is handled automatically on every page.
+  // Leave "" empty to disable analytics entirely. To change: paste the G-XXXXXXXXXX
+  // Measurement ID from Google Analytics -> Admin -> Data Streams -> your web stream.
+  gaMeasurementId: "G-DWQWG8LFTC",
+
   // --- Service & gathering times ---
   services: [
     { name: "Sunday Worship", day: "Every Sunday", time: "10:15 AM" },
@@ -487,6 +494,29 @@ window.SITE = SITE;
     window.addEventListener("scroll", onScroll, { passive: true });
   }
 
+  /**
+   * Load Google Analytics 4 (gtag.js) when a Measurement ID is set. Injected once
+   * per page so it lives on all pages without hardcoding the tag into each HTML file.
+   * Only this site's own property receives data.
+   */
+  function initAnalytics() {
+    var id = SITE.gaMeasurementId && SITE.gaMeasurementId.trim();
+    if (!id) return;
+    if (document.querySelector('script[data-ga4]')) return;
+
+    var s = document.createElement("script");
+    s.async = true;
+    s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(id);
+    s.setAttribute("data-ga4", "true");
+    document.head.appendChild(s);
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    window.gtag = gtag;
+    gtag("js", new Date());
+    gtag("config", id);
+  }
+
   function initReveal() {
     var els = document.querySelectorAll("[data-reveal]");
     if (!els.length) return;
@@ -513,6 +543,7 @@ window.SITE = SITE;
 
   document.addEventListener("DOMContentLoaded", function () {
     applySettings();
+    initAnalytics();
     initContactForm();
     initNav();
     initHeaderScroll();

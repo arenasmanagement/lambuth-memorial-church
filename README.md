@@ -317,9 +317,19 @@ PayPal's per-transaction fee on donations — there are **no monthly fees** anyw
 Resend contact form (verify domain + Vercel env vars) → YouTube Live
 (`livestreamEmbedUrl`) → PayPal (`donationUrl`) → Analytics/Search Console last.
 
-> **Adding Google Analytics later (optional):** create a free GA4 property, copy its small
-> snippet, and paste it just before `</head>` in each page (or ask and it can be wired in
-> once, config-driven, like the other settings).
+### Google Analytics 4 (live)
+
+The site has its **own** GA4 property (separate from any other website). It's wired in once,
+config-driven — the tracking tag loads automatically on all six pages.
+
+- **Where to change it:** `js/main.js` → `gaMeasurementId`. It's currently set to the church's
+  Measurement ID. Paste a different `G-XXXXXXXXXX` to switch properties, or leave it `""` to turn
+  analytics off everywhere.
+- **How it works:** `initAnalytics()` in `js/main.js` injects the standard `gtag.js` tag on page
+  load, so there's no snippet to copy into each HTML file.
+- **See visitors:** Google Analytics → Reports → **Realtime**. Open the live site in another tab
+  and your visit shows up within a few seconds.
+- The Measurement ID is public by design (it ships in the page), so it's safe in this file.
 
 ## Technical SEO & social sharing
 
