@@ -1,0 +1,5 @@
+# robots.txt — Lambuth Memorial United Methodist Church
+User-agent: *
+Allow: /
+
+Sitemap: https://www.lambuthmemorialumc.com/sitemap.xml

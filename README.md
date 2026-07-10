@@ -321,6 +321,36 @@ Resend contact form (verify domain + Vercel env vars) → YouTube Live
 > snippet, and paste it just before `</head>` in each page (or ask and it can be wired in
 > once, config-driven, like the other settings).
 
+## Technical SEO & social sharing
+
+- **Open Graph + Twitter/X cards** are on every page (in each page's `<head>`). When the site is
+  shared on Facebook, Messenger, iMessage, LinkedIn, X, etc., it shows a professional preview
+  with the page title, description, and the church image. Each page has its own title/description;
+  all use one shared preview image.
+- **Preview image:** `assets/og-image.png` (1200×630) — the church logo on the brand ivory
+  background. **Replace this later** with a real church photo at the same size (keep the filename,
+  or update the `og:image`/`twitter:image` URLs in each page's `<head>`).
+- **Canonical URLs** are set per page (points search engines at `https://www.lambuthmemorialumc.com/…`).
+- **Structured data (JSON-LD):** a Schema.org **`Church`** block is in `index.html` `<head>` with
+  the church name, URL, logo, image, full postal address, map link, and Facebook profile. It's
+  plain, well-commented, and easy to edit.
+- **`sitemap.xml`** (repo root) lists all six pages; **`robots.txt`** (repo root) allows all
+  crawlers and references the sitemap. Vercel serves both automatically at
+  `/sitemap.xml` and `/robots.txt`.
+
+**Placeholders / TODOs (intentionally not invented):**
+- **OG image** — swap `assets/og-image.png` for a real church photo when ready.
+- **Geo coordinates** — not added (unknown). Add `"geo": { "@type": "GeoCoordinates",
+  "latitude": …, "longitude": … }` to the JSON-LD in `index.html` once known.
+- **Instagram / TikTok** — currently placeholder profiles, so they're left out of the JSON-LD
+  `sameAs`. Add the real profile URLs there (and they'll show in the footer) once live.
+- **Public email / phone** — none is published (contact is via the form), so none is in the
+  JSON-LD. Add `"email"`/`"telephone"` if the church decides to list one.
+- **Worship end time** — the start time (Sunday 10:15 AM) is in the JSON-LD `description`; add an
+  `openingHoursSpecification` with the real service end time if desired.
+- **After deploying:** submit `sitemap.xml` in Google Search Console, and re-scrape the pages in
+  Facebook's Sharing Debugger so the new preview image is cached.
+
 ## Notes
 - No AI-generated images and no invented ministries/programs — content is real and
   provided by the church.
