@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>document.documentElement.classList.add("js");</script>
   <title>Watch Live — Lambuth Memorial United Methodist Church</title>
   <meta name="description" content="Watch Lambuth Memorial United Methodist Church worship online. Join us live or catch up on Facebook." />
   <link rel="canonical" href="https://www.lambuthmemorialumc.com/watch.html" />
@@ -28,16 +29,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="icon" type="image/png" href="assets/logo.png" />
-  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <link rel="icon" href="assets/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="header" data-header>
     <div class="container header__inner">
       <a class="brand" href="index.html" aria-label="Lambuth Memorial United Methodist Church — Home">
-        <img class="brand__logo" src="assets/logo.png" alt="Lambuth Memorial United Methodist Church, Jackson, Tennessee" />
+        <img class="brand__logo" src="assets/logo-320.png" width="320" height="320" alt="Lambuth Memorial United Methodist Church, Jackson, Tennessee" />
       </a>
       <button class="nav-toggle" data-nav-toggle aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -53,20 +58,20 @@
     </div>
   </header>
 
-  <main>
+  <main id="main" tabindex="-1">
     <section class="section section--dark">
       <div class="container">
         <div class="center" style="margin-bottom: var(--space-5);">
-          <span class="eyebrow eyebrow--on-dark" data-reveal>Watch Live</span>
-          <h1 class="h1" data-reveal data-reveal-delay="1">Join us for worship</h1>
-          <p class="lede mx-auto" style="max-width: 46ch;" data-reveal data-reveal-delay="2">
+          <span class="eyebrow eyebrow--on-dark">Watch Live</span>
+          <h1 class="h1">Join us for worship</h1>
+          <p class="lede mx-auto" style="max-width: 46ch;">
             Can&rsquo;t make it in person? Worship with us right here on this page.
             Our service streams live Sundays at 10:15 AM.
           </p>
         </div>
 
         <!-- Livestream player OR "coming soon" injected from js/main.js -->
-        <div data-site="livestream" data-reveal data-reveal-delay="1">
+        <div data-site="livestream">
           <!-- Set SITE.livestreamEmbedUrl in js/main.js to enable the player -->
         </div>
       </div>

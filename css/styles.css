@@ -14,10 +14,12 @@
   --white-warm:    #faf7f1;
   --beige:         #efe8dc;
   --beige-deep:    #e3d9c8;
-  --gold:          #b08d49;
-  --gold-soft:     #c8a86b;
+  --gold:          #b08d49;  /* bright gold: button fills + accents on dark backgrounds */
+  --gold-soft:     #c8a86b;  /* light gold: accents on dark backgrounds */
+  --gold-ink:      #735c30;  /* deep gold: small gold TEXT on light backgrounds (meets WCAG AA) */
   --text:          #2b2824;
   --text-muted:    #6b645b;
+  --text-muted-strong: #5f584f; /* muted text on beige/beige-deep strips (meets WCAG AA) */
   --text-on-dark:  #ece7dd;
   --text-on-dark-muted: #a7a094;
   --line:          rgba(26, 25, 23, 0.12);
@@ -99,7 +101,7 @@ p { margin: 0 0 var(--space-3); }
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-ink);
   margin: 0 0 var(--space-2);
   display: inline-block;
 }
@@ -388,7 +390,7 @@ p { margin: 0 0 var(--space-3); }
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-ink);
   margin-bottom: 0.35rem;
 }
 .infobar__value {
@@ -401,7 +403,7 @@ p { margin: 0 0 var(--space-3); }
   display: block;
   font-family: var(--font-sans);
   font-size: 0.85rem;
-  color: var(--text-muted);
+  color: var(--text-muted-strong);
   margin-top: 0.2rem;
 }
 
@@ -436,9 +438,11 @@ p { margin: 0 0 var(--space-3); }
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-ink);
   margin-bottom: var(--space-2);
 }
+/* On dark cards, keep the lighter gold for legibility */
+.card--dark .card__kicker { color: var(--gold-soft); }
 .card--dark {
   background: var(--charcoal-soft);
   border-color: var(--line-dark);
@@ -485,13 +489,15 @@ p { margin: 0 0 var(--space-3); }
 .service-row__time {
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--gold);
+  color: var(--gold-ink);
   min-width: 5.5ch;
 }
 .section--dark .services { border-color: var(--line-dark); }
 .section--dark .service-row { border-color: var(--line-dark); }
 .section--dark .service-row__name { color: var(--white-warm); }
 .section--dark .service-row__day { color: var(--text-on-dark-muted); }
+/* On dark sections, keep the lighter gold for the time */
+.section--dark .service-row__time { color: var(--gold-soft); }
 
 /* ---------- Media / image blocks ---------- */
 .media {
@@ -730,7 +736,7 @@ p { margin: 0 0 var(--space-3); }
   max-width: 48ch;
   margin: 0 auto;
 }
-.give-setup a { color: var(--gold); }
+.give-setup a { color: var(--gold-ink); text-decoration: underline; text-underline-offset: 2px; }
 
 @media (max-width: 520px) {
   .give-amounts { grid-template-columns: repeat(2, 1fr); }
@@ -840,7 +846,7 @@ p { margin: 0 0 var(--space-3); }
   color: var(--text-muted);
   margin: 0;
 }
-.form__hint a { color: var(--gold); }
+.form__hint a { color: var(--gold-ink); }
 
 /* Pastor section (About page) */
 .pastor__portrait {
@@ -862,7 +868,7 @@ p { margin: 0 0 var(--space-3); }
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-ink);
   margin-bottom: var(--space-3);
 }
 .pastor__sign {
@@ -922,21 +928,57 @@ p { margin: 0 0 var(--space-3); }
   font-size: 0.85rem;
 }
 
+/* ---------- Skip to content (accessibility) ---------- */
+.skip-link {
+  position: absolute;
+  left: var(--space-3);
+  top: -100px;
+  z-index: 1000;
+  padding: 0.75rem 1.1rem;
+  background: var(--charcoal);
+  color: var(--white-warm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: var(--radius);
+  box-shadow: 0 10px 30px -12px rgba(26, 25, 23, 0.6);
+  transition: top 0.2s var(--ease);
+}
+.skip-link:focus {
+  top: var(--space-2);
+  outline: 2px solid var(--gold-soft);
+  outline-offset: 2px;
+}
+
 /* ---------- Scroll reveal ---------- */
-[data-reveal] {
+/* Reveal animations apply ONLY when JS is active (html.js). Without JavaScript,
+   nothing is hidden, so all content is visible immediately. Above-the-fold hero
+   content has no [data-reveal] at all, so it always paints instantly. */
+.js [data-reveal] {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
   will-change: opacity, transform;
 }
-[data-reveal].is-visible { opacity: 1; transform: none; }
-[data-reveal][data-reveal-delay="1"] { transition-delay: 0.08s; }
-[data-reveal][data-reveal-delay="2"] { transition-delay: 0.16s; }
-[data-reveal][data-reveal-delay="3"] { transition-delay: 0.24s; }
+.js [data-reveal].is-visible { opacity: 1; transform: none; }
+.js [data-reveal][data-reveal-delay="1"] { transition-delay: 0.08s; }
+.js [data-reveal][data-reveal-delay="2"] { transition-delay: 0.16s; }
+.js [data-reveal][data-reveal-delay="3"] { transition-delay: 0.24s; }
 
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-  [data-reveal] { opacity: 1; transform: none; }
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Content is fully visible; no fade/slide, and no hover-lift transforms */
+  .js [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .card:hover,
+  .btn:hover,
+  .give-amt:hover,
+  .nav .btn--dark:hover { transform: none !important; }
 }
 
 /* ---------- Responsive ---------- */

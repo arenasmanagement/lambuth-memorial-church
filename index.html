@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>document.documentElement.classList.add("js");</script>
   <title>Lambuth Memorial United Methodist Church — You Belong Here</title>
   <meta name="description" content="Lambuth Memorial United Methodist Church in Jackson, TN. A place to start again. Sunday worship at 10:15 AM. Come as you are — you are welcome here." />
   <link rel="canonical" href="https://www.lambuthmemorialumc.com/" />
@@ -28,16 +29,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="icon" type="image/png" href="assets/logo.png" />
-  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <link rel="icon" href="assets/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
   <link rel="stylesheet" href="css/styles.css" />
   <!-- Church structured data (JSON-LD) — easy to edit.
        TODO when the info is available (do NOT invent it):
-         - geo: add "geo": { "@type": "GeoCoordinates", "latitude": ..., "longitude": ... }
          - sameAs: add real Instagram / TikTok profile URLs
          - add "telephone" and/or a public "email" if the church wants one listed
-         - worship time is stated in "description" (Sunday 10:15 AM); an
-           openingHoursSpecification can be added once the service END time is known. -->
+       Note: geo coordinates were verified via Google Maps + OpenStreetMap for
+       160 Campbell St, Jackson, TN 38301. The Sunday 10:15 AM worship start is in
+       openingHoursSpecification; a "closes" time can be added once the service
+       end time is confirmed (do not guess it). -->
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -56,7 +61,17 @@
     "postalCode": "38301",
     "addressCountry": "US"
   },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 35.6220875,
+    "longitude": -88.8238774
+  },
   "hasMap": "https://www.google.com/maps/search/?api=1&query=160+Campbell+St,+Jackson,+TN+38301",
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": "https://schema.org/Sunday",
+    "opens": "10:15"
+  },
   "sameAs": [
     "https://www.facebook.com/LambuthMemorialChurch"
   ]
@@ -64,12 +79,13 @@
   </script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
   <!-- HEADER -->
   <header class="header" data-header>
     <div class="container header__inner">
       <a class="brand" href="index.html" aria-label="Lambuth Memorial United Methodist Church — Home">
-        <img class="brand__logo" src="assets/logo.png" alt="Lambuth Memorial United Methodist Church, Jackson, Tennessee" />
+        <img class="brand__logo" src="assets/logo-320.png" width="320" height="320" alt="Lambuth Memorial United Methodist Church, Jackson, Tennessee" />
       </a>
       <button class="nav-toggle" data-nav-toggle aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -85,7 +101,7 @@
     </div>
   </header>
 
-  <main>
+  <main id="main" tabindex="-1">
     <!-- HERO -->
     <section class="hero">
       <!-- HERO BACKGROUND
@@ -100,13 +116,13 @@
       </div>
       <div class="hero__overlay"></div>
       <div class="container hero__inner">
-        <span class="eyebrow eyebrow--on-dark" data-reveal>Jackson, Tennessee</span>
-        <h1 class="display hero__title" data-reveal data-reveal-delay="1">You Belong Here</h1>
-        <p class="hero__sub" data-reveal data-reveal-delay="2">A place to start again.</p>
-        <p class="hero__lede" data-reveal data-reveal-delay="3">
+        <span class="eyebrow eyebrow--on-dark">Jackson, Tennessee</span>
+        <h1 class="display hero__title">You Belong Here</h1>
+        <p class="hero__sub">A place to start again.</p>
+        <p class="hero__lede">
           Come as you are. We&rsquo;d love to meet you.
         </p>
-        <div class="btn-row" data-reveal data-reveal-delay="3">
+        <div class="btn-row">
           <a href="contact.html" class="btn btn--gold">Plan Your Visit</a>
           <a href="watch.html" class="btn btn--outline-light">Watch Live</a>
         </div>

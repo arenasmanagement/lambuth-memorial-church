@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>document.documentElement.classList.add("js");</script>
   <title>Events — Lambuth Memorial United Methodist Church</title>
   <meta name="description" content="Weekly gatherings at Lambuth Memorial United Methodist Church: Sunday worship at 10:15 AM, plus Bible study and basketball every other Saturday." />
   <link rel="canonical" href="https://www.lambuthmemorialumc.com/events.html" />
@@ -28,16 +29,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="icon" type="image/png" href="assets/logo.png" />
-  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <link rel="icon" href="assets/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="header" data-header>
     <div class="container header__inner">
       <a class="brand" href="index.html" aria-label="Lambuth Memorial United Methodist Church — Home">
-        <img class="brand__logo" src="assets/logo.png" alt="Lambuth Memorial United Methodist Church, Jackson, Tennessee" />
+        <img class="brand__logo" src="assets/logo-320.png" width="320" height="320" alt="Lambuth Memorial United Methodist Church, Jackson, Tennessee" />
       </a>
       <button class="nav-toggle" data-nav-toggle aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -53,12 +58,12 @@
     </div>
   </header>
 
-  <main>
+  <main id="main" tabindex="-1">
     <section class="section section--dark">
       <div class="container container--narrow center">
-        <span class="eyebrow eyebrow--on-dark" data-reveal>Events</span>
-        <h1 class="display" data-reveal data-reveal-delay="1">When we gather</h1>
-        <p class="lede" data-reveal data-reveal-delay="2">
+        <span class="eyebrow eyebrow--on-dark">Events</span>
+        <h1 class="display">When we gather</h1>
+        <p class="lede">
           Our week is simple. Worship on Sundays, and time together every other Saturday.
         </p>
       </div>
@@ -105,8 +110,8 @@
         <p class="text-muted center" style="margin-top: var(--space-4);" data-reveal>
           Bible Study and Basketball are held every other Saturday. Please check our
           social media for the next scheduled date — follow us on
-          <a href="#" data-site="facebook" target="_blank" rel="noopener" style="color: var(--gold);">Facebook</a>
-          or <a href="contact.html" style="color: var(--gold);">reach out</a>.
+          <a href="#" data-site="facebook" target="_blank" rel="noopener" style="color: var(--gold-ink);">Facebook</a>
+          or <a href="contact.html" style="color: var(--gold-ink);">reach out</a>.
         </p>
       </div>
     </section>
