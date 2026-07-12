@@ -134,22 +134,27 @@
 
     <!-- PASTOR
          ============================================================
-         TO REPLACE WITH THE REAL PASTOR LATER:
-         1. Add a photo to the assets/ folder, e.g. assets/pastor.jpg
-         2. In the portrait below, delete the <div class="photo-slot">...</div>
-            and replace it with:
-              <img src="assets/pastor.jpg" alt="Pastor [Name]" />
-         3. Update the name, role, welcome paragraphs, and signature text.
+         Portrait: assets/pastor-mike-*.jpg / .webp (responsive srcset, 4:5).
+         To swap the photo later, replace those assets (keep the 4:5 ratio)
+         or update the <picture> srcset below. Update name/role/text as needed.
          ============================================================ -->
     <section class="section">
       <div class="container">
         <div class="split">
           <div class="pastor__portrait" data-reveal>
-            <div class="photo-slot">
-              <span class="photo-slot__icon">&#10057;</span>
-              <strong>Pastor photo</strong>
-              <small>Add a real photo as assets/pastor.jpg</small>
-            </div>
+            <picture>
+              <source
+                type="image/webp"
+                srcset="assets/pastor-mike-600.webp 600w, assets/pastor-mike-900.webp 900w, assets/pastor-mike-1122.webp 1122w"
+                sizes="(max-width: 860px) 88vw, 45vw" />
+              <img
+                src="assets/pastor-mike-900.jpg"
+                srcset="assets/pastor-mike-600.jpg 600w, assets/pastor-mike-900.jpg 900w, assets/pastor-mike-1122.jpg 1122w"
+                sizes="(max-width: 860px) 88vw, 45vw"
+                width="1122" height="1402"
+                loading="lazy" decoding="async"
+                alt="Pastor Mike Peery, Lay Pastor of Lambuth Memorial United Methodist Church." />
+            </picture>
           </div>
           <div data-reveal data-reveal-delay="1">
             <span class="eyebrow">Meet Our Pastor</span>
