@@ -104,15 +104,27 @@
   <main id="main" tabindex="-1">
     <!-- HERO -->
     <section class="hero">
-      <!-- HERO BACKGROUND
-           Solid color today. To use a real church photo or video later, just add
-           ONE line inside hero__media below — nothing else needs to change, and the
-           overlay keeps the text readable over any background.
-             Photo:  <img src="assets/hero.jpg" alt="" />
-             Video:  <video autoplay muted loop playsinline poster="assets/hero.jpg"><source src="assets/hero.mp4" type="video/mp4" /></video>
-      -->
+      <!-- HERO BACKGROUND — art-directed church photo.
+           Desktop uses a wide crop (full architecture); phones use a portrait
+           crop centered on the tower. Optimized WebP + JPEG, eager-loaded for a
+           fast above-the-fold paint. The overlay keeps the hero copy readable. -->
       <div class="hero__media">
-        <!-- <img src="assets/hero.jpg" alt="" /> -->
+        <picture>
+          <!-- Phones / small tablets: portrait crop centered on the tower -->
+          <source media="(max-width: 820px)" type="image/webp"
+            srcset="assets/hero-mobile-600.webp 600w, assets/hero-mobile-900.webp 900w" sizes="100vw" />
+          <source media="(max-width: 820px)" type="image/jpeg"
+            srcset="assets/hero-mobile-600.jpg 600w, assets/hero-mobile-900.jpg 900w" sizes="100vw" />
+          <!-- Tablets / desktop: wide architectural crop -->
+          <source type="image/webp"
+            srcset="assets/hero-desktop-1280.webp 1280w, assets/hero-desktop-1600.webp 1600w, assets/hero-desktop-2048.webp 2048w" sizes="100vw" />
+          <img
+            src="assets/hero-desktop-1600.jpg"
+            srcset="assets/hero-desktop-1280.jpg 1280w, assets/hero-desktop-1600.jpg 1600w, assets/hero-desktop-2048.jpg 2048w"
+            sizes="100vw"
+            alt="Lambuth Memorial United Methodist Church in Jackson, Tennessee."
+            fetchpriority="high" decoding="async" />
+        </picture>
       </div>
       <div class="hero__overlay"></div>
       <div class="container hero__inner">

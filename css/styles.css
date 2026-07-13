@@ -350,9 +350,11 @@ p { margin: 0 0 var(--space-3); }
 .hero__overlay {
   position: absolute;
   inset: 0;
+  /* Soft charcoal gradient: darker on the left (behind the text) so copy stays
+     highly readable, lighter on the right so the church photo shows through. */
   background:
-    linear-gradient(90deg, rgba(20,18,15,0.72) 0%, rgba(20,18,15,0.34) 52%, rgba(20,18,15,0.08) 100%),
-    linear-gradient(180deg, rgba(20,18,15,0.28) 0%, rgba(20,18,15,0.62) 100%);
+    linear-gradient(90deg, rgba(20,18,15,0.80) 0%, rgba(20,18,15,0.42) 52%, rgba(20,18,15,0.10) 100%),
+    linear-gradient(180deg, rgba(20,18,15,0.30) 0%, rgba(20,18,15,0.60) 100%);
 }
 .hero__inner {
   position: relative;
