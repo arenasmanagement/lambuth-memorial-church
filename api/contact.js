@@ -9,19 +9,20 @@
    site (Resend), adapted to a dependency-free function so it
    runs on a static site with no build step.
 
-   ENVIRONMENT VARIABLES (set in Vercel → Settings → Environment
-   Variables — never commit these):
-     RESEND_API_KEY   Resend API key (secret, starts "re_"). Use a key created
-                      specifically for THIS site — do not reuse another site's key.
-     CONTACT_EMAIL    primary recipient — Pastor Mike's inbox (the "To").
-     BCC_EMAIL        optional blind-copy recipient (e.g. the agency inbox). Leave
-                      unset to send with no BCC.
-     FROM_EMAIL       verified sender. Until the domain is verified in Resend, use
-                      "Lambuth Memorial <onboarding@resend.dev>". After verifying
-                      lambuthmemorialumc.com, set it to
-                      "Lambuth Memorial <contact@lambuthmemorialumc.com>".
+   ENVIRONMENT VARIABLES (set in Vercel → this project → Settings →
+   Environment Variables — never commit these):
+     RESEND_API_KEY   Resend API key (secret, starts "re_"). Create a key in the
+                      shared Resend account scoped to the Lambuth domain.
+     CONTACT_EMAIL    primary recipient — peery01@gmail.com (Pastor Mike).
+     BCC_EMAIL        optional blind-copy recipient (e.g. arenasmanagementco@gmail.com).
+                      Leave unset to send with no BCC.
+     FROM_EMAIL       verified sender. Target:
+                        "Lambuth Memorial Website <contact@lambuthmemorialumc.com>"
+                      Until lambuthmemorialumc.com is verified in Resend, this may
+                      temporarily be "Lambuth Memorial Website <onboarding@resend.dev>".
 
-   These live in THIS Vercel project only. They do not affect any other project.
+   These live in THIS Vercel project only. They do not affect the Arenas
+   Management project, which keeps its own separate env vars and domain.
    ============================================================ */
 
 function escapeHtml(value) {
@@ -68,13 +69,22 @@ module.exports = async function handler(req, res) {
     var apiKey = process.env.RESEND_API_KEY;
     var to = process.env.CONTACT_EMAIL;
     var bcc = (process.env.BCC_EMAIL || "").trim();
-    var from = process.env.FROM_EMAIL || "Lambuth Memorial <onboarding@resend.dev>";
+    var from = process.env.FROM_EMAIL || "Lambuth Memorial Website <onboarding@resend.dev>";
     if (!apiKey || !to) {
       // Not configured yet — front-end will show a friendly error.
       return res.status(503).json({ error: "The contact form isn’t connected yet." });
     }
 
-    var subject = "New message from Lambuth Memorial website";
+    var formSubject = (body.subject || "").toString().trim();
+    var origin = (req.headers && (req.headers.origin || req.headers.referer)) || "";
+    var siteOrigin = origin || "https://www.lambuthmemorialumc.com";
+    var submittedAt = new Date().toLocaleString("en-US", {
+      timeZone: "America/Chicago",
+      weekday: "short", year: "numeric", month: "short", day: "numeric",
+      hour: "numeric", minute: "2-digit", timeZoneName: "short",
+    });
+
+    var subject = "New Contact Form Submission — Lambuth Memorial UMC";
     var html =
       '<div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;max-width:600px;margin:0 auto;background:#1a1917;color:#ece7dd;padding:32px;border-radius:12px;">' +
         '<div style="border-bottom:1px solid #33302b;padding-bottom:20px;margin-bottom:20px;">' +
@@ -85,6 +95,7 @@ module.exports = async function handler(req, res) {
           '<tr><td style="padding:6px 0;color:#a7a094;font-size:13px;width:110px;">Name</td><td style="padding:6px 0;color:#ece7dd;font-size:13px;">' + escapeHtml(name) + "</td></tr>" +
           '<tr><td style="padding:6px 0;color:#a7a094;font-size:13px;">Email</td><td style="padding:6px 0;font-size:13px;"><a href="mailto:' + escapeHtml(email) + '" style="color:#c8a86b;">' + escapeHtml(email) + "</a></td></tr>" +
           (phone ? '<tr><td style="padding:6px 0;color:#a7a094;font-size:13px;">Phone</td><td style="padding:6px 0;color:#ece7dd;font-size:13px;">' + escapeHtml(phone) + "</td></tr>" : "") +
+          (formSubject ? '<tr><td style="padding:6px 0;color:#a7a094;font-size:13px;">Subject</td><td style="padding:6px 0;color:#ece7dd;font-size:13px;">' + escapeHtml(formSubject) + "</td></tr>" : "") +
           '<tr><td style="padding:6px 0;color:#a7a094;font-size:13px;">Prayer request</td><td style="padding:6px 0;color:#ece7dd;font-size:13px;">' + (isPrayer ? "Yes" : "No") + "</td></tr>" +
         "</table>" +
         '<div style="margin-top:24px;padding:20px;background:#24221f;border-radius:8px;border:1px solid #33302b;">' +
@@ -94,8 +105,22 @@ module.exports = async function handler(req, res) {
         '<div style="margin-top:24px;">' +
           '<a href="mailto:' + escapeHtml(email) + '" style="display:inline-block;background:#b08d49;color:#1a1917;font-weight:600;font-size:13px;padding:10px 20px;border-radius:6px;text-decoration:none;">Reply to ' + escapeHtml(name) + "</a>" +
         "</div>" +
-        '<p style="color:#555;font-size:11px;margin-top:24px;">Sent from the contact form at lambuthmemorialumc.com</p>' +
+        '<table style="width:100%;border-collapse:collapse;margin-top:24px;border-top:1px solid #33302b;padding-top:12px;">' +
+          '<tr><td style="padding:8px 0 0;color:#8a837a;font-size:11px;width:110px;">Submitted</td><td style="padding:8px 0 0;color:#8a837a;font-size:11px;">' + escapeHtml(submittedAt) + "</td></tr>" +
+          '<tr><td style="padding:4px 0 0;color:#8a837a;font-size:11px;">From website</td><td style="padding:4px 0 0;color:#8a837a;font-size:11px;">' + escapeHtml(siteOrigin) + "</td></tr>" +
+        "</table>" +
       "</div>";
+
+    var text =
+      (isPrayer ? "Prayer request" : "New message") + " from " + name + "\n\n" +
+      "Name: " + name + "\n" +
+      "Email: " + email + "\n" +
+      (phone ? "Phone: " + phone + "\n" : "") +
+      (formSubject ? "Subject: " + formSubject + "\n" : "") +
+      "Prayer request: " + (isPrayer ? "Yes" : "No") + "\n\n" +
+      "Message:\n" + message + "\n\n" +
+      "Submitted: " + submittedAt + "\n" +
+      "From website: " + siteOrigin + "\n";
 
     var mail = {
       from: from,
@@ -103,6 +128,7 @@ module.exports = async function handler(req, res) {
       reply_to: email, // Reply goes straight to the visitor
       subject: subject,
       html: html,
+      text: text, // plain-text part improves deliverability / spam score
     };
     if (bcc) mail.bcc = [bcc]; // optional blind copy (e.g. agency inbox)
 
