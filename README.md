@@ -48,7 +48,7 @@ Open it and edit the `SITE` block at the top. You can change:
 | `paypalMerchantId` | The church's public PayPal Merchant ID (`RNMSDCJKQJP6U`). Used to build the amount-prefill donate link. |
 | `donationItemName` | Description shown on PayPal's donation page. |
 | `donationUrl` | Optional full-URL override (used as-is; amount not appended). Leave `""` for the normal amount-prefill flow. |
-| `livestreamEmbedUrl` | YouTube Live embed. **Leave `""` empty** and Watch Live shows a "Livestream coming soon" placeholder shaped like the player. Paste a YouTube embed URL and it plays in-page. |
+| `youtubeUrl` | **Public** YouTube channel/`/live` URL. Only powers the "Watch on YouTube" button. The player itself is fully automatic (see **Watch Live** below) — no weekly video ID. Leave `""` to hide that button. |
 | `mapsEmbedUrl` | The embedded Google Map on the Contact page |
 | `mapsLinkUrl` | Fallback "Get directions" link. Note: the site now auto-picks the map app per device (Apple Maps on iPhone/iPad, default nav on Android, Google Maps on desktop), and the address text itself is tappable. |
 | `services` | Service/gathering times (name, day, time). These render automatically on Home and Events. |
@@ -110,13 +110,12 @@ Environment Variables (and this README).
    |---|---|
    | `RESEND_API_KEY` | the `re_...` key from step 3 (the Lambuth-specific key) |
    | `CONTACT_EMAIL` | `peery01@gmail.com` |
-   | `BCC_EMAIL` | `arenasmanagementco@gmail.com` (blind copy — optional; remove to send with no BCC) |
-   | `FROM_EMAIL` | `Lambuth Memorial <onboarding@resend.dev>` for now; switch to `Lambuth Memorial <contact@lambuthmemorialumc.com>` after the domain verifies |
+   | `FROM_EMAIL` | `Lambuth Memorial Website <contact@lambuthmemorialumc.com>` (the verified domain sender) |
+   (No `BCC_EMAIL` — the contact function sends only to `CONTACT_EMAIL`. See `EMAIL-SETUP.md`.)
 6. **Redeploy & test.** Trigger a redeploy (push any change, or Vercel → Deployments →
    Redeploy). Open the live Contact page, send a test message, and confirm it lands in
-   **peery01@gmail.com** (and, if `BCC_EMAIL` is set, a blind copy in arenasmanagementco@gmail.com).
-   Then hit **Reply** in Gmail and check the reply is addressed to the email you typed in the
-   form (that's Reply-To working).
+   **peery01@gmail.com**. Then hit **Reply** in Gmail and check the reply is addressed to the
+   email you typed in the form (that's Reply-To working).
 
 **What the form does (already built — no code changes needed):**
 - Collects **Name (required), Email (required), Phone (optional), Message (required),** and a
@@ -147,14 +146,32 @@ One Resend account can serve many sites. To keep every site independent and neve
 > domain in Resend, create a **new** API key for it, and set its env vars in **its own** Vercel
 > project.
 
-### Turning on the livestream later — YouTube Live
-Goal: people watch **on the website**, not just on Facebook. Workflow: **OBS → YouTube Live → embedded here.**
-1. Stream from OBS to your church's YouTube channel (YouTube Live is free).
-2. Get an embed URL — either a specific stream `https://www.youtube.com/embed/VIDEO_ID`,
-   or an always-current one for your channel:
-   `https://www.youtube.com/embed/live_stream?channel=YOUR_CHANNEL_ID`.
-3. Paste it into `livestreamEmbedUrl` in `js/main.js`. Save, commit, push. The player turns
-   on by itself, and Facebook stays as a backup button.
+### Watch Live — automatic YouTube player (no weekly edits)
+Workflow: **OBS → Restream Standard → YouTube + Facebook.** Restream Standard has no
+dependable website embed, so the site reads YouTube's broadcast state directly and shows the
+right thing on its own. **You never paste a weekly video ID.**
+
+How it works: the Watch page asks our serverless endpoint **`/api/livestream`**, which uses the
+**YouTube Data API v3** to check the church channel and pick, in order:
+
+1. **Live now** → embeds the live service (muted autoplay; visitor unmutes).
+2. **Upcoming** → embeds the next scheduled stream (YouTube shows a countdown).
+3. **Replay** → embeds the most recent completed service to watch later.
+4. **Nothing found / API error** → a branded fallback ("Sunday worship begins at 10:15 AM."),
+   never a broken player or YouTube error screen. Facebook stays available as a backup.
+
+Lookups are cached at Vercel's edge (~5 min) so the API quota is barely touched.
+
+**One-time setup** (in the `lambuth-memorial-church` Vercel project → Settings → Environment
+Variables, Production + Preview):
+
+| Name | Value |
+|---|---|
+| `YOUTUBE_API_KEY` | A YouTube Data API v3 key. Create one at **console.cloud.google.com** → new project → *APIs & Services* → enable **YouTube Data API v3** → *Credentials* → *Create credentials → API key*. (Optionally restrict it to the YouTube Data API.) |
+| `YOUTUBE_CHANNEL_ID` | The church channel ID (starts `UC…`). Find it at **studio.youtube.com** → Settings → Channel → Advanced, or from the channel URL. |
+
+Also set `youtubeUrl` in `js/main.js` to the public channel/`/live` URL (this only powers the
+"Watch on YouTube" button). After adding the env vars, redeploy — that's it, permanently.
 
 ### Online giving — PayPal (live)
 Giving is connected to the church's PayPal Business account (**Merchant ID `RNMSDCJKQJP6U`**).

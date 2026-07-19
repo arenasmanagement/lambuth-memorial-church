@@ -70,9 +70,20 @@
           </p>
         </div>
 
-        <!-- Livestream player OR "coming soon" injected from js/main.js -->
+        <!-- Livestream area. This static fallback shows instantly (and if JS is
+             off); js/main.js then asks /api/livestream and swaps in the live,
+             upcoming, or replay YouTube player automatically. -->
         <div data-site="livestream">
-          <!-- Set SITE.livestreamEmbedUrl in js/main.js to enable the player -->
+          <div class="video-frame video-frame--empty">
+            <div class="video-empty">
+              <span class="video-placeholder__eyebrow">Live Worship</span>
+              <p class="video-placeholder__title">Sunday worship begins at 10:15 AM.</p>
+              <p class="video-placeholder__text">The service will appear here automatically when we go live. You&rsquo;re always welcome to watch on Facebook in the meantime.</p>
+            </div>
+          </div>
+          <div class="watch-actions">
+            <a class="btn btn--outline-light btn--sm" data-site="facebook" href="https://www.facebook.com/LambuthMemorialChurch" target="_blank" rel="noopener noreferrer">Watch on Facebook</a>
+          </div>
         </div>
       </div>
     </section>

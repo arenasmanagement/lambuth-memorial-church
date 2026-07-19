@@ -599,6 +599,44 @@ p { margin: 0 0 var(--space-3); }
 .btn--sm { padding: 0.7rem 1.4rem; font-size: 0.75rem; }
 .btn--lg { padding: 1.15rem 2.4rem; font-size: 0.9rem; }
 
+/* Balanced "Watch on YouTube / Watch on Facebook" controls below the player */
+.watch-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+/* Small status pill above the player: live / upcoming / replay */
+.watch-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0 0 var(--space-2);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-on-dark-muted);
+}
+.watch-status--live { color: #f0685f; }
+.watch-status--upcoming { color: var(--gold-soft); }
+.watch-status__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 0 rgba(240, 104, 95, 0.55);
+  animation: watchPulse 1.8s ease-out infinite;
+}
+@keyframes watchPulse {
+  0% { box-shadow: 0 0 0 0 rgba(240, 104, 95, 0.5); }
+  70% { box-shadow: 0 0 0 9px rgba(240, 104, 95, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(240, 104, 95, 0); }
+}
+
 /* ---------- Give / donation widget ---------- */
 .give-card {
   background: var(--white-warm);

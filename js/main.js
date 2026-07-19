@@ -50,14 +50,20 @@ const SITE = {
   // appended (only use this if you ever switch to a hosted PayPal button/page).
   donationUrl: "",
 
-  // --- Livestream (YouTube Live) ---
-  // Workflow: OBS  ->  YouTube Live  ->  embedded here on the website.
-  // Paste a YouTube EMBED url. Two easy options:
-  //   1) A specific stream:  "https://www.youtube.com/embed/VIDEO_ID"
-  //   2) Always-current live stream for your channel:
-  //      "https://www.youtube.com/embed/live_stream?channel=YOUR_CHANNEL_ID"
-  // Leave "" empty to show a styled "stream will appear here" placeholder.
-  livestreamEmbedUrl: "",
+  // --- Livestream (YouTube, fully automatic) ---
+  // Workflow: OBS -> Restream Standard -> YouTube + Facebook.
+  // The Watch Live page shows the RIGHT thing automatically — live now, the next
+  // scheduled stream, or the most recent replay — by asking our own serverless
+  // endpoint /api/livestream, which reads YouTube's broadcast state via the
+  // YouTube Data API. YOU NEVER PASTE A WEEKLY VIDEO ID.
+  //
+  // Setup lives in Vercel Environment Variables (never in this file):
+  //   YOUTUBE_API_KEY      YouTube Data API v3 key (server-side secret)
+  //   YOUTUBE_CHANNEL_ID   the church channel ID (starts "UC...")
+  //
+  // youtubeUrl below is PUBLIC and only powers the "Watch on YouTube" button.
+  // Use the channel's page or its /live URL. Leave "" to hide that button.
+  youtubeUrl: "",
 
   // Google Maps embed src for the address above.
   // To update: Google Maps -> Share -> Embed a map -> copy the src="..." URL only.
@@ -355,39 +361,134 @@ window.SITE = SITE;
     refresh();
   }
 
-  function applyLivestream() {
-    var hasStream =
-      SITE.livestreamEmbedUrl && SITE.livestreamEmbedUrl.trim() !== "";
+  /* --- Watch Live -------------------------------------------------------
+     The player is DRIVEN BY /api/livestream, which reports one of four
+     states from the church's YouTube channel: live, upcoming, replay, none.
+     We render a branded fallback FIRST (so there is never empty space or a
+     layout shift), then upgrade to the real player once the lookup returns.
+     Nothing here needs a weekly video ID. */
 
-    document.querySelectorAll('[data-site="livestream"]').forEach(function (container) {
-      if (hasStream) {
-        container.innerHTML =
-          '<div class="video-frame"><iframe src="' +
-          SITE.livestreamEmbedUrl +
-          '" title="Live worship service" frameborder="0" ' +
-          'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ' +
-          'allowfullscreen></iframe></div>';
-      } else {
-        // 16:9 "coming soon" area shaped like the real player, with Facebook as
-        // a small backup BELOW it (never the main action).
-        container.innerHTML =
-          '<div class="video-frame video-frame--empty">' +
-          '<div class="video-empty">' +
+  function escAttr(s) {
+    return String(s == null ? "" : s).replace(/"/g, "&quot;");
+  }
+
+  /** Balanced "Watch on YouTube / Watch on Facebook" controls (safe new-tab links). */
+  function watchControls(videoId) {
+    var yt = videoId
+      ? "https://www.youtube.com/watch?v=" + encodeURIComponent(videoId)
+      : (SITE.youtubeUrl || "").trim();
+    var fb = (SITE.facebookUrl || "").trim();
+    var html = '<div class="watch-actions">';
+    if (yt) {
+      html +=
+        '<a class="btn btn--outline-light btn--sm" href="' + escAttr(yt) +
+        '" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>';
+    }
+    if (fb) {
+      html +=
+        '<a class="btn btn--outline-light btn--sm" href="' + escAttr(fb) +
+        '" target="_blank" rel="noopener noreferrer">Watch on Facebook</a>';
+    }
+    html += "</div>";
+    return html;
+  }
+
+  /** 16:9 YouTube iframe (privacy-friendly nocookie host, fullscreen enabled). */
+  function playerFrame(videoId, autoplayMuted) {
+    var params = "rel=0&modestbranding=1&playsinline=1";
+    if (autoplayMuted) params += "&autoplay=1&mute=1";
+    var src = "https://www.youtube-nocookie.com/embed/" +
+      encodeURIComponent(videoId) + "?" + params;
+    return (
+      '<div class="video-frame"><iframe src="' + escAttr(src) + '" ' +
+      'title="Lambuth Memorial worship service" loading="lazy" ' +
+      'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ' +
+      "allowfullscreen></iframe></div>"
+    );
+  }
+
+  /** Small status pill shown above the player (live / upcoming / replay). */
+  function statusPill(kind, label) {
+    return (
+      '<div class="watch-status watch-status--' + kind + '">' +
+      (kind === "live" ? '<span class="watch-status__dot"></span>' : "") +
+      label + "</div>"
+    );
+  }
+
+  /** Branded fallback shaped exactly like the real 16:9 player. */
+  function fallbackMarkup() {
+    return (
+      '<div class="video-frame video-frame--empty">' +
+        '<div class="video-empty">' +
           '<span class="video-placeholder__eyebrow">Live Worship</span>' +
-          '<p class="video-placeholder__title">Livestream coming soon</p>' +
-          '<p class="video-placeholder__text">Our service will play right here each ' +
-          'Sunday at 10:15 AM.</p>' +
-          "</div></div>" +
-          '<div class="watch-backup">' +
-          '<span class="watch-backup__label">Can&rsquo;t see the stream?</span>' +
-          '<a class="btn btn--outline-light btn--sm" data-site="facebook" ' +
-          'href="' + SITE.facebookUrl + '" target="_blank" rel="noopener">Watch on Facebook</a>' +
-          "</div>";
-        container.querySelectorAll('[data-site="facebook"]').forEach(function (el) {
-          el.setAttribute("href", SITE.facebookUrl);
-        });
-      }
-    });
+          '<p class="video-placeholder__title">Sunday worship begins at 10:15 AM.</p>' +
+          '<p class="video-placeholder__text">The service will appear here ' +
+          "automatically when we go live. You&rsquo;re always welcome to watch " +
+          "on Facebook in the meantime.</p>" +
+        "</div>" +
+      "</div>" +
+      watchControls("")
+    );
+  }
+
+  function renderLivestream(container, data) {
+    data = data || { state: "none" };
+    var html;
+
+    if (data.state === "live" && data.videoId) {
+      html =
+        statusPill("live", "Live now") +
+        playerFrame(data.videoId, true) +
+        watchControls(data.videoId);
+    } else if (data.state === "upcoming" && data.videoId) {
+      html =
+        statusPill("upcoming", upcomingLabel(data.scheduledStartTime)) +
+        playerFrame(data.videoId, false) +
+        watchControls(data.videoId);
+    } else if (data.state === "replay" && data.videoId) {
+      html =
+        statusPill("replay", "Latest service · watch the replay") +
+        playerFrame(data.videoId, false) +
+        watchControls(data.videoId);
+    } else {
+      html = fallbackMarkup();
+    }
+    container.innerHTML = html;
+  }
+
+  /** "Upcoming · Sun 10:15 AM" from an ISO scheduled start time, when present. */
+  function upcomingLabel(iso) {
+    if (!iso) return "Upcoming service";
+    try {
+      var d = new Date(iso);
+      if (isNaN(d.getTime())) return "Upcoming service";
+      var when = d.toLocaleString("en-US", {
+        weekday: "short", hour: "numeric", minute: "2-digit",
+      });
+      return "Upcoming · " + when;
+    } catch (e) {
+      return "Upcoming service";
+    }
+  }
+
+  function applyLivestream() {
+    var containers = document.querySelectorAll('[data-site="livestream"]');
+    if (!containers.length) return;
+
+    // 1) Show the branded fallback immediately — no empty space, no layout shift.
+    containers.forEach(function (c) { c.innerHTML = fallbackMarkup(); });
+
+    // 2) Ask our endpoint what to show, then upgrade in place.
+    if (!("fetch" in window)) return;
+    fetch("/api/livestream", { headers: { Accept: "application/json" } })
+      .then(function (r) { return r.ok ? r.json() : { state: "none" }; })
+      .then(function (data) {
+        containers.forEach(function (c) { renderLivestream(c, data); });
+      })
+      .catch(function () {
+        /* Keep the branded fallback already on screen. */
+      });
   }
 
   /** Show a status message under the contact form. */
