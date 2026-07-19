@@ -17,6 +17,8 @@
   --gold:          #b08d49;  /* bright gold: button fills + accents on dark backgrounds */
   --gold-soft:     #c8a86b;  /* light gold: accents on dark backgrounds */
   --gold-ink:      #735c30;  /* deep gold: small gold TEXT on light backgrounds (meets WCAG AA) */
+  --live-red:      #8f2c2c;  /* church red: LIVE button fill (white text = ~8:1 contrast, AA) */
+  --live-red-dot:  #cc3b34;  /* pulsing live dot — reads on both light and dark headers */
   --text:          #2b2824;
   --text-muted:    #6b645b;
   --text-muted-strong: #5f584f; /* muted text on beige/beige-deep strips (meets WCAG AA) */
@@ -635,6 +637,63 @@ p { margin: 0 0 var(--space-3); }
   0% { box-shadow: 0 0 0 0 rgba(240, 104, 95, 0.5); }
   70% { box-shadow: 0 0 0 9px rgba(240, 104, 95, 0); }
   100% { box-shadow: 0 0 0 0 rgba(240, 104, 95, 0); }
+}
+
+/* --- "We're live" indicator (homepage CTA + nav) -----------------------
+   Appears only while a broadcast is actually live. Understated: a solid dot
+   with one slow, soft expanding ring — no flashing. The ring is purely
+   decorative and disappears under reduced-motion (global rule), leaving the
+   solid dot visible. */
+.live-dot {
+  display: inline-block;
+  position: relative;
+  width: 9px;
+  height: 9px;
+  margin-right: 0.55em;
+  border-radius: 50%;
+  background: var(--live-red-dot);
+  flex: 0 0 auto;
+  vertical-align: baseline;
+}
+.live-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--live-red-dot);
+  opacity: 0.55;
+  animation: liveDotPulse 2.4s ease-out infinite;
+}
+@keyframes liveDotPulse {
+  0%   { transform: scale(1);   opacity: 0.55; }
+  70%  { transform: scale(2.6); opacity: 0; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+
+/* Hero CTA in its live state: tasteful church red, white text (AA contrast) */
+.btn--live {
+  background: var(--live-red);
+  border-color: var(--live-red);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn--live:hover {
+  background: #7c2626;
+  border-color: #7c2626;
+  color: #fff;
+}
+.btn--live .live-dot,
+.btn--live .live-dot::after {
+  background: #fff;   /* white dot reads cleanly on the red fill */
+}
+
+/* Nav "Watch Live" -> "Live": keep the normal nav text colour (good contrast
+   in both the transparent and scrolled header states); only add the red dot. */
+.nav a.nav-live {
+  display: inline-flex;
+  align-items: center;
 }
 
 /* ---------- Give / donation widget ---------- */

@@ -472,6 +472,25 @@ window.SITE = SITE;
     }
   }
 
+  /**
+   * Single source of truth for livestream status. Memoized so the whole page
+   * makes ONE request to /api/livestream no matter how many things need it
+   * (the Watch player AND the homepage/nav live indicator share this promise).
+   * The endpoint itself is edge-cached, so YouTube is not polled per visitor.
+   */
+  var _livestreamStatus = null;
+  function getLivestreamStatus() {
+    if (_livestreamStatus) return _livestreamStatus;
+    if (!("fetch" in window)) {
+      _livestreamStatus = Promise.resolve({ state: "none" });
+      return _livestreamStatus;
+    }
+    _livestreamStatus = fetch("/api/livestream", { headers: { Accept: "application/json" } })
+      .then(function (r) { return r.ok ? r.json() : { state: "none" }; })
+      .catch(function () { return { state: "none" }; });
+    return _livestreamStatus;
+  }
+
   function applyLivestream() {
     var containers = document.querySelectorAll('[data-site="livestream"]');
     if (!containers.length) return;
@@ -479,16 +498,45 @@ window.SITE = SITE;
     // 1) Show the branded fallback immediately — no empty space, no layout shift.
     containers.forEach(function (c) { c.innerHTML = fallbackMarkup(); });
 
-    // 2) Ask our endpoint what to show, then upgrade in place.
-    if (!("fetch" in window)) return;
-    fetch("/api/livestream", { headers: { Accept: "application/json" } })
-      .then(function (r) { return r.ok ? r.json() : { state: "none" }; })
-      .then(function (data) {
-        containers.forEach(function (c) { renderLivestream(c, data); });
-      })
-      .catch(function () {
-        /* Keep the branded fallback already on screen. */
+    // 2) Ask (the shared) status what to show, then upgrade in place.
+    getLivestreamStatus().then(function (data) {
+      containers.forEach(function (c) { renderLivestream(c, data); });
+    });
+  }
+
+  /**
+   * Homepage/nav "we're live" indicator. When — and only when — a broadcast is
+   * actually live, the hero CTA becomes a tasteful church-red "Live Now" and the
+   * nav "Watch Live" link becomes "Live", each with a subtle pulsing dot. When
+   * the stream isn't live the markup stays exactly as authored, so it restores
+   * itself automatically on the next page load. Reuses the shared status above.
+   */
+  function applyLiveIndicators() {
+    var ctas = document.querySelectorAll("[data-live-cta]");
+    var navLinks = document.querySelectorAll('[data-nav] a[href="watch.html"]');
+    if (!ctas.length && !navLinks.length) return;
+
+    getLivestreamStatus().then(function (data) {
+      if (!data || data.state !== "live") return; // default stays as-is
+
+      var dot = '<span class="live-dot" aria-hidden="true"></span>';
+
+      ctas.forEach(function (a) {
+        if (a.getAttribute("data-live-on") === "true") return;
+        a.setAttribute("data-live-on", "true");
+        a.classList.add("btn--live");
+        a.setAttribute("aria-label", "Watch our worship service — live now");
+        a.innerHTML = dot + '<span class="live-cta__label">Live Now</span>';
       });
+
+      navLinks.forEach(function (a) {
+        if (a.getAttribute("data-live-on") === "true") return;
+        a.setAttribute("data-live-on", "true");
+        a.classList.add("nav-live");
+        a.setAttribute("aria-label", "Watch Live — live now");
+        a.innerHTML = dot + "Live";
+      });
+    });
   }
 
   /** Show a status message under the contact form. */
@@ -649,5 +697,6 @@ window.SITE = SITE;
     initNav();
     initHeaderScroll();
     initReveal();
+    applyLiveIndicators();
   });
 })();
