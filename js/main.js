@@ -63,7 +63,7 @@ const SITE = {
   //
   // youtubeUrl below is PUBLIC and only powers the "Watch on YouTube" button.
   // Use the channel's page or its /live URL. Leave "" to hide that button.
-  youtubeUrl: "",
+  youtubeUrl: "https://www.youtube.com/@lambuthcommunitychurch3394",
 
   // Google Maps embed src for the address above.
   // To update: Google Maps -> Share -> Embed a map -> copy the src="..." URL only.
