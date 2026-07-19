@@ -18,7 +18,6 @@ projects" at the bottom).
 | Sender (From) | `Lambuth Memorial Website <contact@lambuthmemorialumc.com>` |
 | Reply-To | the visitor's email (Pastor Mike just hits Reply) |
 | Recipient (To) | `peery01@gmail.com` |
-| Optional BCC | `arenasmanagementco@gmail.com` |
 
 Every site is **independent**: its own Vercel project, its own env vars, its own
 Resend domain + API key. Nothing here touches the Arenas Management project.
@@ -35,7 +34,6 @@ expose them to the frontend.
 | `RESEND_API_KEY` | *(secret — create in Resend → API keys, scoped to `lambuthmemorialumc.com`; starts `re_`)* |
 | `CONTACT_EMAIL` | `peery01@gmail.com` |
 | `FROM_EMAIL` | `Lambuth Memorial Website <contact@lambuthmemorialumc.com>` |
-| `BCC_EMAIL` | `arenasmanagementco@gmail.com` *(optional)* |
 
 After adding them, redeploy (or push a commit) so the function picks them up.
 
@@ -85,8 +83,9 @@ This is the standard. For a new client site:
 3. Point the form at `/api/contact` (as `js/main.js` already does here).
 4. In the **shared Resend account** (Pro): add the client's domain, add its DNS
    records, and create a **dedicated API key scoped to that domain**.
-5. In the new Vercel project, set `RESEND_API_KEY`, `CONTACT_EMAIL`,
-   `FROM_EMAIL`, and optional `BCC_EMAIL`.
+5. In the new Vercel project, set `RESEND_API_KEY`, `CONTACT_EMAIL`, and
+   `FROM_EMAIL`. (A `BCC_EMAIL` is optional and not used on this site — the
+   function has no BCC logic; submissions go only to `CONTACT_EMAIL`.)
 
 Because each site has its own project, domain, key, and env vars, projects are
 fully isolated — one client can never affect another.

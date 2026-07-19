@@ -14,8 +14,6 @@
      RESEND_API_KEY   Resend API key (secret, starts "re_"). Create a key in the
                       shared Resend account scoped to the Lambuth domain.
      CONTACT_EMAIL    primary recipient — peery01@gmail.com (Pastor Mike).
-     BCC_EMAIL        optional blind-copy recipient (e.g. arenasmanagementco@gmail.com).
-                      Leave unset to send with no BCC.
      FROM_EMAIL       verified sender. Target:
                         "Lambuth Memorial Website <contact@lambuthmemorialumc.com>"
                       Until lambuthmemorialumc.com is verified in Resend, this may
@@ -68,7 +66,6 @@ module.exports = async function handler(req, res) {
 
     var apiKey = process.env.RESEND_API_KEY;
     var to = process.env.CONTACT_EMAIL;
-    var bcc = (process.env.BCC_EMAIL || "").trim();
     var from = process.env.FROM_EMAIL || "Lambuth Memorial Website <onboarding@resend.dev>";
     if (!apiKey || !to) {
       // Not configured yet — front-end will show a friendly error.
@@ -130,7 +127,6 @@ module.exports = async function handler(req, res) {
       html: html,
       text: text, // plain-text part improves deliverability / spam score
     };
-    if (bcc) mail.bcc = [bcc]; // optional blind copy (e.g. agency inbox)
 
     var resp = await fetch("https://api.resend.com/emails", {
       method: "POST",
