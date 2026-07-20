@@ -601,6 +601,21 @@ p { margin: 0 0 var(--space-3); }
 .btn--sm { padding: 0.7rem 1.4rem; font-size: 0.75rem; }
 .btn--lg { padding: 1.15rem 2.4rem; font-size: 0.9rem; }
 
+/* Accessibility: guarantee a ~44px tap target on small buttons WITHOUT changing
+   their painted size. An invisible, centered overlay extends only the touch area
+   (it does not affect layout, spacing, or appearance). */
+.btn--sm { position: relative; }
+.btn--sm::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 44px;
+  min-height: 100%;
+}
+
 /* Balanced "Watch on YouTube / Watch on Facebook" controls below the player */
 .watch-actions {
   display: flex;
@@ -1049,6 +1064,15 @@ p { margin: 0 0 var(--space-3); }
   top: var(--space-2);
   outline: 2px solid var(--gold-soft);
   outline-offset: 2px;
+}
+
+/* Branded keyboard-focus indicator (gold). Only shows for keyboard users
+   (:focus-visible), so mouse clicks look unchanged. Element-specific focus
+   styles above (form fields, address links, skip link) are more specific and
+   keep their own treatment. */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
 }
 
 /* ---------- Scroll reveal ---------- */

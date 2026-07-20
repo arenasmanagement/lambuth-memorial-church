@@ -8,7 +8,6 @@
   <meta name="description" content="Plan your visit to Lambuth Memorial United Methodist Church at 160 Campbell St, Jackson, TN. Sundays at 10:15 AM. We'd love to meet you." />
   <link rel="canonical" href="https://www.lambuthmemorialumc.com/contact.html" />
 
-  <!-- Open Graph (Facebook, Messenger, iMessage, LinkedIn, etc.) -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Lambuth Memorial United Methodist Church" />
   <meta property="og:title" content="Contact &amp; Visit — Lambuth Memorial United Methodist Church" />
@@ -20,7 +19,6 @@
   <meta property="og:image:alt" content="Lambuth Memorial United Methodist Church" />
   <meta property="og:locale" content="en_US" />
 
-  <!-- Twitter / X Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Contact &amp; Visit — Lambuth Memorial United Methodist Church" />
   <meta name="twitter:description" content="Plan your visit to Lambuth Memorial United Methodist Church at 160 Campbell St, Jackson, TN. Sundays at 10:15 AM. We'd love to meet you." />
@@ -73,7 +71,6 @@
     <section class="section">
       <div class="container">
         <div class="split">
-          <!-- DETAILS -->
           <div data-reveal>
             <span class="eyebrow">Visit</span>
             <h2 class="h2">Plan your visit</h2>
@@ -94,7 +91,7 @@
               <div>
                 <div class="card__kicker">Address</div>
                 <p style="margin:0;"><span data-site="address">160 Campbell St, Jackson, TN 38301</span></p>
-                <p style="margin:0;"><a href="#" data-site="maps-link" target="_blank" rel="noopener" style="color: var(--gold-ink);">Get directions &rarr;</a></p>
+                <p style="margin:0;"><a href="#" data-site="maps-link" target="_blank" rel="noopener noreferrer" style="color: var(--gold-ink);">Get directions &rarr;</a></p>
               </div>
               <div>
                 <div class="card__kicker">Sundays</div>
@@ -110,19 +107,14 @@
               <div>
                 <div class="card__kicker">Follow Us</div>
                 <p style="margin:0;">
-                  <a href="#" data-site="facebook" target="_blank" rel="noopener" style="color: var(--gold-ink);">Facebook</a>
-                  &middot; <a href="#" data-site="instagram" target="_blank" rel="noopener" style="color: var(--gold-ink);">Instagram</a>
-                  &middot; <a href="#" data-site="tiktok" target="_blank" rel="noopener" style="color: var(--gold-ink);">TikTok</a>
+                  <a href="#" data-site="facebook" target="_blank" rel="noopener noreferrer" style="color: var(--gold-ink);">Facebook</a>
+                  &middot; <a href="#" data-site="instagram" target="_blank" rel="noopener noreferrer" style="color: var(--gold-ink);">Instagram</a>
+                  &middot; <a href="#" data-site="tiktok" target="_blank" rel="noopener noreferrer" style="color: var(--gold-ink);">TikTok</a>
                 </p>
               </div>
             </div>
           </div>
 
-          <!-- FORM
-               Posts (AJAX) to our /api/contact serverless function, which sends
-               the message via Resend to Pastor Mike's inbox with Reply-To set to
-               the visitor. The visitor stays on this page and sees a success
-               message. Endpoint is set in js/main.js -> SITE.formEndpoint. -->
           <div data-reveal data-reveal-delay="1">
             <div class="card">
               <h3 class="h3">Send a message</h3>
@@ -131,7 +123,6 @@
                 and we&rsquo;ll get back to you.
               </p>
               <form class="form" id="contact-form">
-                <!-- Honeypot: bots fill this in, real people never see it -->
                 <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
                 <div class="field">
@@ -163,7 +154,6 @@
       </div>
     </section>
 
-    <!-- MAP -->
     <section class="section section--beige section--tight">
       <div class="container">
         <span class="eyebrow" data-reveal>Find Us</span>
@@ -171,7 +161,6 @@
           160 Campbell St, Jackson, TN
         </h2>
         <div class="map-frame" data-reveal data-reveal-delay="1">
-          <!-- Map embed src injected from js/main.js -->
           <iframe data-site="maps-embed" title="Map to Lambuth Memorial United Methodist Church" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
       </div>
@@ -185,7 +174,7 @@
           <div class="footer__brand">Lambuth <span>Memorial</span></div>
           <p class="footer__umc">United Methodist Church</p>
           <p data-site="address">160 Campbell St, Jackson, TN 38301</p>
-          <p><a href="#" data-site="maps-link" target="_blank" rel="noopener">Get directions &rarr;</a></p>
+          <p><a href="#" data-site="maps-link" target="_blank" rel="noopener noreferrer">Get directions &rarr;</a></p>
         </div>
         <div>
           <h2>Explore</h2>
@@ -200,9 +189,9 @@
         <div>
           <h2>Connect</h2>
           <nav class="footer__links">
-            <a href="#" data-site="facebook" target="_blank" rel="noopener">Facebook</a>
-            <a href="#" data-site="instagram" target="_blank" rel="noopener">Instagram</a>
-            <a href="#" data-site="tiktok" target="_blank" rel="noopener">TikTok</a>
+            <a href="#" data-site="facebook" target="_blank" rel="noopener noreferrer">Facebook</a>
+            <a href="#" data-site="instagram" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="#" data-site="tiktok" target="_blank" rel="noopener noreferrer">TikTok</a>
           </nav>
         </div>
       </div>

@@ -12,3 +12,9 @@ node_modules/
 # Source photo (optimized versions live in assets/)
 Mike2.png
 Church outside.jpg
+
+# Source artwork / working files (optimized versions live in assets/)
+Indoor 1.png
+Indoor 2.png
+church outside bulletin.png
+*.psd

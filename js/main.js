@@ -135,7 +135,7 @@ window.SITE = SITE;
       if (has) {
         el.setAttribute("href", url);
         el.setAttribute("target", "_blank");
-        el.setAttribute("rel", "noopener");
+        el.setAttribute("rel", "noopener noreferrer");
         el.style.display = "";
       } else {
         // Only hide standalone social links, never buttons that carry other text.
@@ -165,7 +165,7 @@ window.SITE = SITE;
       a.setAttribute("href", m.url);
       if (m.newTab) {
         a.setAttribute("target", "_blank");
-        a.setAttribute("rel", "noopener");
+        a.setAttribute("rel", "noopener noreferrer");
       } else {
         a.removeAttribute("target");
       }
@@ -180,7 +180,7 @@ window.SITE = SITE;
       el.setAttribute("tabindex", "0");
       el.setAttribute("aria-label", "Open directions to " + SITE.address);
       var go = function () {
-        if (m.newTab) window.open(m.url, "_blank", "noopener");
+        if (m.newTab) window.open(m.url, "_blank", "noopener,noreferrer");
         else window.location.href = m.url;
       };
       el.addEventListener("click", go);
@@ -242,7 +242,7 @@ window.SITE = SITE;
       if (live) {
         el.setAttribute("href", SITE.donationUrl);
         el.setAttribute("target", "_blank");
-        el.setAttribute("rel", "noopener");
+        el.setAttribute("rel", "noopener noreferrer");
         el.classList.remove("is-disabled");
       } else {
         el.setAttribute("href", "#");
@@ -319,7 +319,7 @@ window.SITE = SITE;
           donateBtn.style.display = "";
           donateBtn.setAttribute("href", buildDonationUrl(amt, state.freq));
           donateBtn.setAttribute("target", "_blank");
-          donateBtn.setAttribute("rel", "noopener");
+          donateBtn.setAttribute("rel", "noopener noreferrer");
           donateBtn.classList.remove("is-disabled");
           donateBtn.removeAttribute("aria-disabled");
         }
