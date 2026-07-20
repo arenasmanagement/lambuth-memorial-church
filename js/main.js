@@ -62,8 +62,10 @@ const SITE = {
   //   YOUTUBE_CHANNEL_ID   the church channel ID (starts "UC...")
   //
   // youtubeUrl below is PUBLIC and only powers the "Watch on YouTube" button.
-  // Use the channel's page or its /live URL. Leave "" to hide that button.
-  youtubeUrl: "https://www.youtube.com/@lambuthcommunitychurch3394",
+  // Uses the stable channel-ID URL so it can never break if the channel is
+  // renamed or the @handle changes (current handle: @lambuthmemorialumc).
+  // Leave "" to hide that button.
+  youtubeUrl: "https://www.youtube.com/channel/UCYsR75EhgGgNM26EKaNWS_Q",
 
   // Google Maps embed src for the address above.
   // To update: Google Maps -> Share -> Embed a map -> copy the src="..." URL only.
