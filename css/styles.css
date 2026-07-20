@@ -1006,7 +1006,9 @@ p { margin: 0 0 var(--space-3); }
   color: var(--gold-soft);
   margin: -0.4rem 0 var(--space-2);
 }
-.footer h4 {
+/* Footer column headings. Rendered as <h2> for a valid heading outline;
+   this rule keeps their original small, uppercase, gold appearance. */
+.footer h2 {
   font-family: var(--font-sans);
   font-size: 0.75rem;
   font-weight: 600;
