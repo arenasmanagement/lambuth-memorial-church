@@ -611,6 +611,30 @@ window.SITE = SITE;
     });
   }
 
+  /**
+   * Prayer entry point. The homepage links to contact.html#prayer. When a visitor
+   * arrives that way, we pre-select the existing "prayer request" option, bring the
+   * form into view, and place the cursor in the message — so someone seeking prayer
+   * lands ready to write, with prayer already chosen. Reuses the existing form and
+   * prayer functionality; adds no new workflow.
+   */
+  function initPrayerDeepLink() {
+    if (window.location.hash !== "#prayer") return;
+    var box = document.getElementById("prayer");
+    var form = document.getElementById("contact-form");
+    if (!box || !form) return;
+    box.checked = true;
+    var reduce = window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var msg = document.getElementById("message");
+    window.requestAnimationFrame(function () {
+      form.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+      // Focus the message (no preventScroll) so the field is reliably brought
+      // into view even if the smooth scroll is constrained.
+      if (msg) msg.focus();
+    });
+  }
+
   function initNav() {
     var toggle = document.querySelector("[data-nav-toggle]");
     var nav = document.querySelector("[data-nav]");
@@ -694,6 +718,7 @@ window.SITE = SITE;
     applySettings();
     initAnalytics();
     initContactForm();
+    initPrayerDeepLink();
     initNav();
     initHeaderScroll();
     initReveal();
