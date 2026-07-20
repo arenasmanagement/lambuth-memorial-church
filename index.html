@@ -207,11 +207,19 @@
       <div class="container">
         <div class="split">
           <div class="media" data-reveal>
-            <div class="photo-slot">
-              <span class="photo-slot__icon">&#10057;</span>
-              <strong>Your photo here</strong>
-              <small>Add a real church photo as assets/community.jpg</small>
-            </div>
+            <picture>
+              <source
+                type="image/webp"
+                srcset="assets/community-600.webp 600w, assets/community-900.webp 900w, assets/community-1086.webp 1086w"
+                sizes="(max-width: 860px) 88vw, 45vw" />
+              <img
+                src="assets/community-900.jpg"
+                srcset="assets/community-600.jpg 600w, assets/community-900.jpg 900w, assets/community-1086.jpg 1086w"
+                sizes="(max-width: 860px) 88vw, 45vw"
+                width="1086" height="1358"
+                loading="lazy" decoding="async"
+                alt="The warmly lit sanctuary of Lambuth Memorial United Methodist Church — exposed wood trusses, glowing lanterns, and a stained-glass rose window above the chancel." />
+            </picture>
           </div>
           <div data-reveal data-reveal-delay="1">
             <span class="eyebrow">Our Heart</span>
